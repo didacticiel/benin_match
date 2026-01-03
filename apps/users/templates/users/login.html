@@ -1,0 +1,114 @@
+{% extends "core/base.html" %}
+{% block content %}
+<!-- Le halo en arrière-plan est déjà violet (bg-primary/10) -->
+<main class="relative min-h-screen flex items-center justify-center bg-base-100 py-20 px-4 transition-colors duration-500">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <div class="max-w-md w-full z-10">
+        <!-- La carte utilise border-base-content/5, mais le focus sera violet -->
+        <div class="bg-base-200/50 backdrop-blur-xl border border-base-content/5 p-10 rounded-[3rem] shadow-3xl text-base-content">
+            <div class="text-center mb-10">
+                <!-- Icône violette (text-primary) -->
+                <div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-black tracking-tighter">Content de vous revoir</h2>
+                <p class="text-base-content/60 text-sm mt-2">Accédez à votre espace sécurisé</p>
+            </div>
+
+            {% if form.errors or form.non_field_errors %}
+            <div class="bg-error/10 border border-error/50 text-error p-4 rounded-2xl mb-6 text-xs text-center">
+                {% if form.non_field_errors %}
+                    {{ form.non_field_errors }}
+                {% else %}
+                    Email ou mot de passe incorrect.
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="flex justify-center mb-4">
+                <div id="googleBtnContainer" class="w-full min-h-[44px]"></div>
+            </div>
+
+            <div class="relative flex justify-center text-xs uppercase mb-6 mt-6">
+                <span class="bg-transparent px-4 text-base-content/50 font-bold tracking-[0.3em] z-10">Ou</span>
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-base-content/10"></div></div>
+            </div>
+
+            <form class="space-y-6" method="POST">
+                {% csrf_token %}
+                <div class="form-control">
+                    <!-- Input border: focus:border-primary (donc violet) -->
+                    <input type="email" name="username" required 
+                           class="input input-bordered h-14 bg-base-100 border-base-content/20 rounded-2xl focus:border-primary text-base-content" 
+                           placeholder="Email">
+                </div>
+
+                <div class="form-control">
+                    <input type="password" name="password" required 
+                           class="input input-bordered h-14 bg-base-100 border-base-content/20 rounded-2xl focus:border-primary text-base-content" 
+                           placeholder="Mot de passe">
+                    <label class="label justify-end">
+                        <!-- Lien violet -->
+                        <a href="#" class="label-text-alt text-primary/70 hover:text-primary transition-colors">Mot de passe oublié ?</a>
+                    </label>
+                </div>
+
+                <!-- Bouton VIOLET via 'btn-primary' -->
+                <button type="submit" class="btn btn-primary w-full h-14 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all">
+                    Se connecter
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-base-content/60 font-medium mt-8">
+                Nouveau ici ? 
+                <a href="{% url 'users:register' %}" class="text-base-content font-bold hover:text-primary underline underline-offset-4 ml-1 transition-colors">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+</main>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+    function handleCredentialResponse(response) {
+        fetch("{% url 'users_api:google_auth' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ id_token: response.credential })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.access) {
+                window.location.href = data.redirect_url || "/";
+            } else {
+                alert("Erreur: " + data.error);
+            }
+        })
+        .catch(err => console.error("Erreur d'appel API:", err));
+    }
+
+    function initGoogleAuth() {
+        const container = document.getElementById("googleBtnContainer");
+        if (typeof google !== 'undefined' && google.accounts && container) {
+            google.accounts.id.initialize({
+                client_id: "{{ GOOGLE_OAUTH_CLIENT_ID }}",
+                callback: handleCredentialResponse,
+                ux_mode: "popup",
+                context: "signin"
+            });
+            google.accounts.id.renderButton(container, { theme: "filled_black", size: "large", shape: "pill" });
+        } else {
+            setTimeout(initGoogleAuth, 100);
+        }
+    }
+    document.addEventListener("DOMContentLoaded", initGoogleAuth);
+    document.addEventListener("htmx:afterSwap", function(event) { initGoogleAuth(); });
+</script>
+{% endblock %}

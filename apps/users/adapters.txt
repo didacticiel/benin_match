@@ -1,0 +1,58 @@
+# apps/users/adapters.py
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.conf import settings
+
+# Récupère le modèle User personnalisé
+User = get_user_model()
+
+class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    """
+    Adaptateur personnalisé pour gérer la connexion et l'inscription via des comptes sociaux.
+    """
+
+    def pre_social_login(self, request, sociallogin):
+        """
+        Méthode appelée avant la finalisation de la connexion sociale.
+        Permet de lier un compte social à un utilisateur existant si l'email correspond.
+        """
+        # On ignore si l'utilisateur est déjà connecté
+        if sociallogin.is_existing:
+            return
+
+        # On ignore s'il n'y a pas d'email associé au compte social
+        if not sociallogin.email_addresses:
+            return
+        
+        # Récupère le premier email (le seul dans le cas de Google)
+        email = sociallogin.email_addresses[0].email
+        
+        # Tente de trouver un utilisateur existant avec cet email
+        try:
+            user = User.objects.get(email=email)
+            # Si un utilisateur est trouvé, on lie le compte social à cet utilisateur
+            sociallogin.connect(request, user)
+        except User.DoesNotExist:
+            # Si aucun utilisateur n'existe, on laisse allauth en créer un nouveau
+            pass
+
+    def save_user(self, request, sociallogin, form=None):
+        """
+        Méthode appelée pour sauvegarder l'utilisateur après la connexion sociale.
+        C'est ici que nous générons les tokens JWT.
+        """
+        # Appelle la méthode parente pour s'assurer que l'utilisateur est bien sauvegardé
+        user = super().save_user(request, sociallogin, form=form)
+
+        # Génère les tokens JWT pour l'utilisateur
+        refresh = RefreshToken.for_user(user)
+        
+        # Stocke les tokens dans l'objet sociallogin.state.
+        # C'est une astuce pour les récupérer plus tard dans la vue de connexion sociale.
+        # dj-rest_auth les utilisera pour les inclure dans la réponse JSON.
+        sociallogin.state['access_token'] = str(refresh.access_token)
+        sociallogin.state['refresh_token'] = str(refresh)
+
+        return user

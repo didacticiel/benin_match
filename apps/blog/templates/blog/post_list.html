@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<main class="min-h-screen pt-32 pb-20 bg-base-100 transition-colors duration-500">
+    <div class="container mx-auto px-4 max-w-7xl">
+        
+        <header class="mb-16">
+            <h1 class="text-5xl font-black text-base-content mb-4 tracking-tighter">Journal <span class="text-primary">&</span> Tech</h1>
+            <p class="text-base-content/60 text-lg max-w-2xl">Analyses techniques, retours d'expérience et tutoriels sur Django, l'IA et la cybersécurité.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                {% for post in posts %}
+                    <article class="group bg-base-200/50 border border-base-300 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+                        <div class="p-6">
+                            <h2 class="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
+                                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                            </h2>
+                            <p class="text-sm text-base-content/60 mb-6 line-clamp-2">{{ post.seo_description }}</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono font-bold px-2 py-1 bg-primary/10 text-primary rounded">
+                                    {{ post.categories.first.name }}
+                                </span>
+                                <span class="text-[10px] opacity-40 uppercase font-bold">{{ post.published_at|date:"d M Y" }}</span>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <aside class="space-y-8">
+                <div>
+                    <h3 class="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-primary rounded-full"></span> Catégories
+                    </h3>
+                    <ul class="space-y-2">
+                        {% for cat in categories %}
+                        <li>
+                            <a href="#" class="flex justify-between items-center p-3 rounded-xl hover:bg-base-200 transition-colors group">
+                                <span class="text-sm font-medium group-hover:text-primary">{{ cat.name }}</span>
+                                <span class="badge badge-sm badge-outline opacity-30 group-hover:opacity-100">{{ cat.post_count }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>
+{% endblock %}

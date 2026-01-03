@@ -1,0 +1,33 @@
+# === CORE DJANGO ===
+Django>=4.2,<5.0              # Dernière version LTS (Stable)
+asgiref>=3.7.2               # Pour la compatibilité ASGI (Chat)
+
+# === BASE DE DONNÉES (PythonAnywhere utilise Postgres) ===
+psycopg2-binary>=2.9.6       # Driver PostgreSQL pour Python
+
+# === PRODUCTION & DEPLOIEMENT (PythonAnywhere) ===
+gunicorn>=21.2.0             # Serveur WSGI (Standard pro)
+whitenoise>=6.5.0            # Gestion des fichiers statiques (CSS/JS)
+python-decouple>=3.8         # Gestion propre des variables d'environnement (.env)
+
+# === IMAGES & MÉDIAS ===
+Pillow>=10.0.0               # Traitement des images (redimensionnement, formats)
+
+# === FRONTEND (TAILWIND + INTERACTION) ===
+#django-tailwind>=3.6.0       # Intégration Django de Tailwind CSS
+django-htmx>=1.17.0          # Support HTMX côté Django (Middleware, etc.)
+crispy-tailwind>=0.9.0       # Formulaires propres avec Tailwind
+
+# === TEMPS RÉEL / CHAT (Futur) ===
+channels>=4.0.0              # WebSockets pour Django
+daphne>=4.0.0                # Serveur ASGI (nécessaire pour Channels)
+
+# === UTILITAIRES ===
+django-cors-headers>=4.2.0   # Sécurité API (si tu exposes une API)
+
+# Ajouts nécessaires pour ce fichier
+dj-database-url>=2.1.0
+django-environ>=0.11.2
+easy-thumbnails>=2.8
+django-allauth>=0.57.0
+django-ckeditor>=6.7.0

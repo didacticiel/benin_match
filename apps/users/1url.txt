@@ -1,0 +1,119 @@
+# apps/users/urls_api.py
+from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import UserRegisterView, UserDetailView, AvatarUploadView, LogoutView, google_auth
+
+app_name = 'users_api'
+
+urlpatterns = [
+   # ----------------------------------------------------
+    # 1. Authentification de Base (JWT)
+    # ----------------------------------------------------
+    
+    # POST /api/v1/users/register/ (Inscription)
+    path("register/", UserRegisterView.as_view(), name="user-register"),
+    
+    # POST /api/v1/users/login/ (Connexion email/password)
+    path('login/', TokenObtainPairView.as_view(), name='token-obtain-pair'), # <-- AJOUTÉ
+    
+    # POST /api/v1/users/token/refresh/ (Renouvellement)
+    path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'), # <-- AJOUTÉ
+    
+    # POST /api/v1/users/logout/ (Déconnexion/Blacklist du refresh token)
+    path("logout/", LogoutView.as_view(), name="user-logout"),
+    
+    # ----------------------------------------------------
+    # 2. Gestion du Profil et Avatar
+    # ----------------------------------------------------
+    
+    # GET/PUT/PATCH /api/v1/users/me/ (Détails de l'utilisateur connecté)
+    path("me/", UserDetailView.as_view(), name="user-detail"),
+    
+    # PATCH /api/v1/users/me/avatar/ (Téléchargement et mise à jour de l'avatar)
+    path("me/avatar/", AvatarUploadView.as_view(), name="avatar-upload"),
+    
+    # ----------------------------------------------------
+    # 3. Authentification Sociale
+    # ----------------------------------------------------
+    
+    # POST /api/v1/users/google-auth/ (Connexion/Inscription via Google ID Token)
+    #path("google-auth/", google_auth, name="google-auth-id-token"),
+    path("google-auth/", google_auth, name="google_auth"),
+]
+
+# apps/users/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'users'
+
+urlpatterns = [
+    # Change 'signup' par 'register' pour correspondre au {% url 'users:register' %} de ta navbar
+    path('signup/', views.register_view, name='register'), 
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+]
+# src/urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static 
+
+urlpatterns = [
+    # ----------------------------------------------------
+    # 1. ADMIN DJANGO
+    # ----------------------------------------------------
+    path('admin/', admin.site.urls),
+
+    # ----------------------------------------------------
+    # 2. ENDPOINTS API (Version 1)
+    # ----------------------------------------------------
+    
+    # 2.1. USERS API (Authentification JWT, Google Auth)
+    path('api/v1/users/', include('apps.users.urls_api', namespace='users_api')),
+    
+    # 2.2. BLOG API (Articles et Catégories)
+    path('api/v1/blog/', include('apps.blog.urls_api', namespace='blog_api')),
+
+    # 2.3. PORTFOLIO API - À faire
+    # path('api/v1/portfolio/', include('apps.portfolio.urls_api', namespace='portfolio_api')),
+    
+    # ----------------------------------------------------
+    # 3. VUES DJANGO / HTMX (FRONTEND PUBLIC)
+    # ----------------------------------------------------
+    
+    # 3.1. CORE (Page d'accueil, À propos)
+    path('', include('apps.core.urls')), 
+    
+    # 3.2. CKEditor
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    
+    # 3.3. USERS (Templates : signup, login, logout)
+    # ⚠️ CORRECTION : Namespace différent pour éviter les conflits
+    path('users/', include('apps.users.urls', namespace='users_views')),
+    
+    # 3.4. BLOG (Affichage public des articles)
+    path('blog/', include('apps.blog.urls', namespace='blog')),
+    
+    # 3.5. PORTFOLIO - À faire
+    # path('portfolio/', include('apps.portfolio.urls', namespace='portfolio')),
+]
+
+# ----------------------------------------------------
+# 4. FICHIERS STATIQUES, MÉDIAS ET DEBUG TOOLBAR
+# ----------------------------------------------------
+
+if settings.DEBUG:
+    # 4.1. Debug Toolbar
+    try:
+        import debug_toolbar
+        urlpatterns = [
+            path('__debug__/', include(debug_toolbar.urls)),
+        ] + urlpatterns
+    except ImportError:
+        pass
+    
+    # 4.2. Fichiers Médias et Statiques
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

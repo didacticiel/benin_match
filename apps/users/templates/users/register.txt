@@ -1,0 +1,147 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-base-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-base-100 p-10 rounded-2xl shadow-xl">
+        <div class="text-center">
+            <h2 class="mt-6 text-3xl font-extrabold text-base-content">Créer un compte</h2>
+            <p class="mt-2 text-sm text-base-content/60">Rejoignez Abdoul Didacticiel aujourd'hui</p>
+        </div>
+        
+        <form class="mt-8 space-y-6" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-semibold">{{ field.label }}</span>
+                    </label>
+                    {% if field.name == "avatar" %}
+                        <input type="file" name="{{ field.name }}" class="file-input file-input-bordered file-input-primary w-full" />
+                    {% else %}
+                        <input type="{{ field.field.widget.input_type|default:'text' }}" 
+                               name="{{ field.name }}" 
+                               class="input input-bordered w-full {% if field.errors %}input-error{% endif %}" 
+                               placeholder="{{ field.label }}">
+                    {% endif %}
+                    {% if field.errors %}
+                        <label class="label">
+                            <span class="label-text-alt text-error">{{ field.errors|striptags }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary w-full">
+                    S'inscrire
+                </button>
+            </div>
+            
+            <div class="divider uppercase text-xs text-base-content/40 font-bold">Ou s'inscrire avec</div>
+
+            <div class="flex justify-center">
+                <div id="g_id_onload"
+                    data-client_id="{{ GOOGLE_OAUTH_CLIENT_ID }}"
+                    data-context="signup"
+                    data-ux_mode="popup"
+                    data-callback="handleCredentialResponse"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" 
+                     data-type="standard" 
+                     data-shape="rectangular" 
+                     data-theme="outline" 
+                     data-text="signup_with" 
+                     data-size="large" 
+                     data-logo_alignment="left">
+                </div>
+            </div>
+
+            <script src="https://accounts.google.com/gsi/client" async defer></script>
+            <script>
+            // 🔍 DEBUG : Afficher l'origine actuelle
+            console.log("🌐 Origine actuelle:", window.location.origin);
+            console.log("📍 URL complète:", window.location.href);
+            console.log("🆔 Client ID utilisé:", "{{ GOOGLE_OAUTH_CLIENT_ID }}");
+            
+            // ⚠️ FORCER le rechargement de la configuration Google
+            // Ajout d'un timestamp pour éviter le cache
+            const timestamp = new Date().getTime();
+            console.log("⏰ Timestamp:", timestamp);
+            
+            // Fonction pour récupérer le cookie CSRF
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let cookie of cookies) {
+                        cookie = cookie.trim();
+                        if (cookie.startsWith(name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            
+            // Callback appelé par Google après authentification
+            function handleCredentialResponse(response) {
+                console.log("🔵 Jeton Google reçu :", response.credential);
+                
+                // Afficher un loader (optionnel)
+                const signInButton = document.querySelector('.g_id_signin');
+                if (signInButton) {
+                    signInButton.style.opacity = '0.5';
+                    signInButton.style.pointerEvents = 'none';
+                }
+                
+                // Envoyer le token à Django
+                fetch("{% url 'users_api:google_auth' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ id_token: response.credential })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log("✅ Réponse reçue:", data);
+                    
+                    if (data.access) {
+                        // ✅ Redirection vers la page d'accueil
+                        console.log("🚀 Redirection vers:", data.redirect_url || "/");
+                        window.location.href = data.redirect_url || "/";
+                    } else {
+                        throw new Error(data.error || "Erreur inconnue");
+                    }
+                })
+                .catch(error => {
+                    console.error("❌ Erreur:", error);
+                    alert("Erreur de connexion avec Google: " + error.message);
+                    
+                    // Réactiver le bouton
+                    if (signInButton) {
+                        signInButton.style.opacity = '1';
+                        signInButton.style.pointerEvents = 'auto';
+                    }
+                });
+            }
+            </script>
+        </form>
+
+        <div class="text-center mt-4">
+            <span class="text-sm text-base-content/60">Déjà membre ?</span>
+            <a href="{% url 'users_views:login' %}" class="text-sm font-medium text-primary hover:underline ml-1">Connectez-vous</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

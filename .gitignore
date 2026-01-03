@@ -1,0 +1,78 @@
+# === PYTHON ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# === ENVIRONNEMENT VIRTUEL (VENV) ===
+# Ne jamais commiter ton venv, il est lourd et spécifique à ta machine
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# === DJANGO ===
+# Base de données locale (SQLite)
+*.sqlite3
+db.sqlite3
+db.sqlite3-journal
+
+# Logs
+*.log
+
+# Fichiers sensibles (NE JAMAIS COMMITER CELA)
+.env
+.env.local
+*.key
+
+# === TAILWIND & NODE ===
+# Dossiers lourds générés par npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+# Si tu veux versionner ton package.json, garde-le. Sinon, ignore aussi package.json.
+
+# === FICHIERS STATIQUES & MEDIAS ===
+# Ne commit pas les fichiers CSS compilés (générés sur le serveur)
+# Ne commit pas les photos uploadées par les utilisateurs (trop lourd)
+staticfiles/
+static_root/
+media/
+uploads/
+
+# === IDE & EDITEURS DE CODE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === SYSTÈME D'EXPLOITATION ===
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

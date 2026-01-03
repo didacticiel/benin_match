@@ -1,0 +1,61 @@
+
+POST http://127.0.0.1:8000/api/users/register/
+Content-Type: application/json
+
+{
+  "username": "sahilteacher",
+  "email": "sahiltteacher@gmail.com",
+  "password": "Azerty1234@",
+  "role": "teacher" 
+}
+
+
+###
+POST http://127.0.0.1:8000/api/users/login/
+Content-Type: application/json
+
+{
+  "identifier": "sahilteacher", 
+  "password": "Azerty1234@"
+}
+
+###
+
+
+
+###
+GET http://127.0.0.1:8000/api/users/me/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNDA3Nzk1LCJpYXQiOjE3NjE0MDQxOTUsImp0aSI6Ijk5YWRhYjM3NGMwNTRlNDRhYTEzN2Q3N2U2NDE4YWE2IiwidXNlcl9pZCI6ImViYjRjYjBlLTU1MTYtNGIyMy05MTljLWY1OTRhYTBmYjdiYSJ9.yWfcuncdPDlFFzijaeyhnXxr5xi7ipIHXrE0Ejl3mFc
+###
+POST  http://127.0.0.1:8000/api/users/refresh-token/
+Content-Type: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZkNTY3NjIxLWM5MmMtNDAzMC1iMTE1LWU0NTI1MDNlY2ZhOCIsImV4cCI6MTc2MTc1NjI2MCwiaWF0IjoxNzYxMTUxNDYwLCJ0eXBlIjoicmVmcmVzaCJ9.kg_6lClP4toDSFkX_eabyS5H7UIrlc2n36I8WOGA33U"
+}
+
+
+
+###
+POST http://127.0.0.1:8000/api/users/logout/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYzOTI4YThlLTAwODMtNDFhZS04MmRiLWZjMDljYzIzY2RmYyIsImV4cCI6MTc2MTE1MzAxOCwiaWF0IjoxNzYwNzIxMDE4LCJ0eXBlIjoiYWNjZXNzIn0.reK7-fUAAJX0HbKKF54a2p5CxNbOu6ITk2oqrJKchdE
+
+
+###
+POST http://127.0.0.1:8000/api/users/login/
+Content-Type: application/json
+
+{
+  "identifier": "teacher1@gmail.com",
+  "password": "Azerty1234@"
+}
+
+###
+POST http://127.0.0.1:8000/api/courses/categories/
+Content-Type: application/json
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNDEyNzEzLCJpYXQiOjE3NjE0MDkxMTQsImp0aSI6ImY3YzQxYjgxOGY1ZjQzNTNiN2EzMjU2ODEwZGJkOTY5IiwidXNlcl9pZCI6ImViYjRjYjBlLTU1MTYtNGIyMy05MTljLWY1OTRhYTBmYjdiYSJ9.Gs0FBz1L-1gqtn01iXaVf_Jyi64j0CQ9QophoWXPfpQ
+{
+  "name": "Programmation Python",
+  "description": "Cours pour apprendre Python de A à Z"
+}

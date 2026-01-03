@@ -1,0 +1,16 @@
+{% if user.is_authenticated %}
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+                <img src="{{ user.avatar.url|default:'https://ui-avatars.com/api/?name='|add:user.username }}" />
+            </div>
+        </label>
+        <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+            <li><a class="justify-between">Profil <span class="badge">Nouveau</span></a></li>
+            <li><a href="{% url 'users:logout' %}" class="text-error">Déconnexion</a></li>
+        </ul>
+    </div>
+{% else %}
+    <a href="{% url 'users:login' %}" class="btn btn-ghost">Connexion</a>
+    <a href="{% url 'users:signup' %}" class="btn btn-primary">S'inscrire</a>
+{% endif %}

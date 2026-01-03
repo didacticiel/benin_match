@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ post.title }} | Blog{% endblock %}
+
+{% block content %}
+<main class="min-h-screen pt-32 pb-20 bg-base-100 transition-colors duration-500">
+    <article class="container mx-auto px-4 max-w-4xl">
+        
+        <header class="mb-12 text-center">
+            <div class="flex items-center justify-center gap-4 mb-6 font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                {% for cat in post.categories.all %}
+                    <a href="{% url 'blog:category_posts' cat.slug %}" class="hover:text-base-content transition-colors">{{ cat.name }}</a>
+                {% endfor %}
+                <span class="w-1 h-1 rounded-full bg-base-300"></span>
+                <span class="text-base-content/50">{{ post.reading_time }} min de lecture</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-black text-base-content mb-8 tracking-tighter leading-[1.1]">
+                {{ post.title }}
+            </h1>
+
+            <div class="flex items-center justify-center gap-4">
+                <div class="avatar placeholder">
+                    <div class="bg-primary text-primary-content rounded-full w-12 shadow-lg">
+                        <span class="text-lg font-bold">{{ post.author.username|slice:":1"|upper }}</span>
+                    </div>
+                </div>
+                <div class="text-left">
+                    
+                    <p class="text-[10px] uppercase opacity-50 font-bold">Publié le {{ post.published_at|date:"d F Y" }}</p>
+                </div>
+            </div>
+        </header>
+
+        {% if post.cover_image %}
+        <div class="mb-16 relative group">
+            <div class="absolute -inset-4 bg-primary/5 rounded-[2.5rem] blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="relative w-full h-auto rounded-3xl shadow-2xl object-cover aspect-video">
+        </div>
+        {% endif %}
+
+        <div class="prose prose-lg md:prose-xl dark:prose-invert max-w-none 
+                    prose-headings:font-black prose-headings:tracking-tighter
+                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                    prose-pre:bg-base-200 prose-pre:border prose-pre:border-base-300
+                    transition-colors duration-500">
+            {{ post.content|safe }}
+        </div>
+
+        <div class="mt-20 p-8 bg-base-200 rounded-3xl border border-base-300 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h4 class="text-xl font-bold mb-1 text-base-content">Cet article vous a aidé ?</h4>
+                <p class="text-sm opacity-60">Laissez une note pour soutenir mon travail.</p>
+            </div>
+            <div class="rating rating-md lg:rating-lg">
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" />
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" checked />
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" />
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" />
+                <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" />
+            </div>
+        </div>
+
+        <section class="mt-24">
+            <div class="flex items-center justify-between mb-12">
+                <h3 class="text-3xl font-black text-base-content tracking-tight">
+                    Commentaires <span class="text-primary">({{ post.comments.count }})</span>
+                </h3>
+            </div>
+
+            {% if user.is_authenticated %}
+                <form class="mb-16 space-y-4">
+                    <textarea class="textarea textarea-bordered w-full h-32 rounded-2xl bg-base-200 border-base-300 focus:border-primary transition-all p-6" placeholder="Partagez votre avis technique ou posez une question..."></textarea>
+                    <button class="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/20">Publier le commentaire</button>
+                </form>
+            {% else %}
+                <div class="alert bg-base-200 border-base-300 mb-16 rounded-2xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Veuillez vous <a href="#" class="text-primary font-bold">connecter</a> pour laisser un commentaire.</span>
+                </div>
+            {% endif %}
+
+            <div class="space-y-8">
+                {% for comment in post.comments.all %}
+                <div class="flex gap-4 p-6 bg-base-200/30 rounded-2xl border border-base-300/50">
+                    <div class="avatar placeholder h-fit">
+                        <div class="bg-base-300 text-base-content rounded-full w-10">
+                            <span class="text-xs">{{ comment.author.username|slice:":1"|upper }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="font-bold text-sm">{{ comment.author.username }}</span>
+                            <span class="text-[10px] uppercase opacity-40">{{ comment.created_at|date:"d M Y" }}</span>
+                        </div>
+                        <p class="text-sm text-base-content/80 leading-relaxed">
+                            {{ comment.content }}
+                        </p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center opacity-40 italic py-10">Soyez le premier à commenter cet article.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </article>
+</main>
+{% endblock %}

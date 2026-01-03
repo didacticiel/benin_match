@@ -1,0 +1,101 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Mes Services - Abdoul Didacticiel{% endblock %}
+
+{% block content %}
+<main class="bg-base-100 min-h-screen transition-colors duration-500">
+    
+    <!-- HERO SECTION : Fond neutre clair/sombre avec HALO VIOLET dominant -->
+    <section class="relative pt-40 pb-20 overflow-hidden bg-base-100 bg-gradient-to-b from-base-100 via-base-100 to-base-100 dark:from-violet-950/50 dark:via-base-100 dark:to-base-100 transition-colors duration-500">
+        
+        <!-- Le halo utilise directement la couleur primaire (Violet) -->
+        <div class="absolute inset-0 z-0 opacity-20 dark:opacity-30 pointer-events-none">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,var(--color-primary)_0%,transparent_70%)] blur-[120px]"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <!-- Titre : Dégradé Violet Clair vers Fuchsia (Dominance assurée) -->
+            <h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-base-content">
+                Solutions <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Digitales</span>
+            </h1>
+            <p class="text-lg text-base-content/70 max-w-2xl mx-auto mb-10">
+                J'accompagne les entreprises et les particuliers dans leur transformation numérique avec une expertise pointue en développement, IA et sécurité.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Carte 1 : Développement Web (Violet Clair) -->
+            <div class="p-8 rounded-[2.5rem] bg-base-200/50 border border-base-content/5 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500 group">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-base-content">Développement Web</h3>
+                <p class="text-base-content/70 leading-relaxed mb-6">
+                    Création de sites web performants, scalables et sécurisés avec Django et Tailwind CSS. Du MVP à la plateforme complexe.
+                </p>
+                <ul class="space-y-2 text-sm font-semibold text-base-content/80">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span> Applications Web (SaaS)</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span> API REST & Backend</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span> Optimisation SEO</li>
+                </ul>
+            </div>
+
+            <!-- Carte 2 : Solutions IA (Fuchsia - Pour la dynamique du violet) -->
+            <div class="p-8 rounded-[2.5rem] bg-base-200/50 border border-base-content/5 hover:border-secondary/50 hover:shadow-xl hover:shadow-secondary/10 transition-all duration-500 group">
+                <div class="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-base-content">Solutions IA</h3>
+                <p class="text-base-content/70 leading-relaxed mb-6">
+                    Intégration de l'intelligence artificielle pour automatiser vos processus et analyser vos données de manière intelligente.
+                </p>
+                <ul class="space-y-2 text-sm font-semibold text-base-content/80">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Chatbots Intelligents</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Analyse Prédictive</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Automatisation (LLM)</li>
+                </ul>
+            </div>
+
+            <!-- Carte 3 : Sécurité Digitale (CHANGÉ DE VERT -> VIOLET PROFOND) -->
+            <div class="p-8 rounded-[2.5rem] bg-base-200/50 border border-base-content/5 hover:border-violet-800/50 hover:shadow-xl hover:shadow-violet-800/10 transition-all duration-500 group">
+                <div class="w-16 h-16 bg-violet-900/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-violet-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-base-content">Sécurité Digitale</h3>
+                <p class="text-base-content/70 leading-relaxed mb-6">
+                    Audit et sécurisation de vos infrastructures. Ne laissez plus vos données et celles de vos clients sans protection.
+                </p>
+                <ul class="space-y-2 text-sm font-semibold text-base-content/80">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-violet-800 rounded-full"></span> Audits de sécurité</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-violet-800 rounded-full"></span> Pentesting Web</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-violet-800 rounded-full"></span> Protection Cloud</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA : Dégradé Violet dominant -->
+    <section class="py-20">
+        <div class="container mx-auto px-4 text-center">
+            <!-- Utilisation de primary (Violet) vers accent (Violet foncé) au lieu de purple-700 -->
+            <div class="bg-gradient-to-br from-primary to-accent p-12 rounded-[3rem] text-white shadow-2xl shadow-primary/20">
+                <h2 class="text-3xl md:text-5xl font-black mb-6 italic uppercase tracking-tighter">Prêt à lancer votre projet ?</h2>
+                <p class="text-lg opacity-90 mb-10 max-w-xl mx-auto">Parlons de vos besoins et trouvons ensemble la solution technologique idéale.</p>
+                <a href="{% url 'core:contact' %}" class="btn bg-white text-primary border-none hover:bg-gray-100 hover:scale-105 transition-all rounded-full px-10 btn-lg font-bold">Démarrer une collaboration</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock %}

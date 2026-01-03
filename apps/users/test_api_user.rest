@@ -1,0 +1,21 @@
+
+###
+POST http://127.0.0.1:8000/api/v1/users/register/
+Content-Type: application/json
+
+{
+    "email": "testeur.api@example.com",
+    "password": "MotDePasse123",
+    "password2": "MotDePasse123",
+    "first_name": "Testeur",
+    "last_name": "API"
+}
+
+###
+POST http://127.0.0.1:8000/api/v1/auth/login/
+Content-Type: application/json
+
+{
+    "email": "testeur.api@example.com",
+    "password": "MotDePasse123" 
+}
