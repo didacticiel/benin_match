@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+{% block title %}Rencontres - Benin Match{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-20">
+    <h1 class="text-3xl font-black text-center mb-10">Nos Célibataires</h1>
+
+    <!-- Grille des profils -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        {% for profile in profiles %}
+        <div class="bg-base-200/50 border border-white/10 rounded-2xl p-4 hover:border-primary/50 transition-colors group cursor-pointer">
+            <!-- Lien vers le détail -->
+            <a href="{% url 'profiles:detail' profile.id %}" class="block">
+                <!-- Avatar -->
+                <div class="w-full aspect-square rounded-xl overflow-hidden mb-3 relative">
+                    {% if profile.user.avatar %}
+                        <img src="{{ profile.user.avatar.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ profile.user.email }}&background=f97316&color=fff" class="w-full h-full object-cover">
+                    {% endif %}
+                    
+                    <!-- Badge Diaspora -->
+                    {% if profile.is_diaspora %}
+                        <div class="absolute top-2 right-2 bg-secondary text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                            DIASPORA
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Infos -->
+                <div class="text-center">
+                    <h3 class="font-bold text-base-content mb-1">{{ profile.user.get_full_name }}</h3>
+                    <p class="text-sm text-base-content/60 mb-2">
+                        {{ profile.age }} ans • {{ profile.city }}
+                    </p>
+                    <div class="text-[10px] uppercase tracking-widest text-primary font-bold">
+                        Voir le profil
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-20 text-base-content/50">
+            Aucun profil trouvé pour le moment.
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination (Django standard) -->
+    {% if is_paginated %}
+    <div class="flex justify-center gap-2 mt-12">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-ghost">Précédent</a>
+        {% endif %}
+        
+        <span class="btn btn-ghost btn-disabled">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-ghost">Suivant</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Modifier mon Profil - Benin Match{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-20 max-w-2xl">
+    <div class="bg-base-200/50 backdrop-blur-3xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+        <h2 class="text-3xl font-black text-base-content mb-8">Modifier mon profil</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            
+            <div class="mt-8 flex justify-end">
+                <a href="{% url 'profiles:my_profile' %}" class="btn btn-ghost mr-4">Annuler</a>
+                <button type="submit" class="btn btn-primary px-8">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

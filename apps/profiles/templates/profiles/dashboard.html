@@ -1,0 +1,184 @@
+{% extends "core/base.html" %}
+{% block title %}Mon Dashboard - Benin Match{% endblock %}
+
+{% block content %}
+
+<!-- Déclencheur du Drawer pour Mobile -->
+<div class="drawer lg:drawer-open">
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content flex flex-col">
+        
+        <!-- HEADER DU DASHBOARD (Mobile Only) -->
+        <div class="lg:hidden flex items-center justify-between p-4 bg-base-200 border-b border-white/5">
+            <span class="font-black text-xl">Menu</span>
+            <label for="my-drawer" class="drawer-button btn btn-ghost btn-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </label>
+        </div>
+
+        <div class="flex-1 flex">
+            
+            <!-- SIDEBAR (Navigation) -->
+            <div class="drawer-side h-screen min-h-screen border-r border-white/5 bg-[#050505] hidden lg:block lg:w-64 fixed">
+                <div class="p-6 flex flex-col h-full">
+                    
+                    <!-- Logo -->
+                    <div class="mb-10 flex items-center gap-3">
+                        <span class="bg-primary text-white w-8 h-8 flex items-center justify-center rounded-lg font-black italic">BM</span>
+                        <span class="text-xl font-black tracking-tighter uppercase text-white">Benin Match</span>
+                    </div>
+
+                    <!-- Menu Principal -->
+                    <ul class="menu w-full rounded-box space-y-2 flex-1">
+                        <!-- Dashboard (Actif) -->
+                        <li>
+                            <a href="{% url 'profiles:dashboard' %}" class="active">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7-7-2 2-7 7M3 12h14M3 12a9 9 0 01-9 9m9 9a9 9 0 01-9 9v6a3 3 0 003 3h14a3 3 0 003-3v-6a9 9 0 01-9-9z" /></svg>
+                                Vue d'ensemble
+                            </a>
+                        </li>
+                        
+                        <!-- Modifier Profil -->
+                        <li>
+                            <a href="{% url 'profiles:edit' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                Mon Profil
+                            </a>
+                        </li>
+
+                        <!-- Messages (Lien mort pour l'instant, mais prêt) -->
+                        <li>
+                            <a href="#" class="opacity-50 cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                Messages
+                            </a>
+                        </li>
+
+                        <!-- Paramètres -->
+                        <li>
+                            <a href="{% url 'profiles:edit' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                Paramètres
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Déconnexion (En bas) -->
+                    <div class="mt-auto">
+                        <a href="{% url 'users:logout' %}" class="btn btn-outline btn-error w-full border-error/20">
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENU PRINCIPAL -->
+            <div class="flex-1 bg-base-100 min-h-screen p-4 md:p-8">
+                <div class="max-w-6xl mx-auto">
+                    
+                    <!-- Welcome Header -->
+                    <div class="mb-8 flex items-center justify-between">
+                        <div>
+                            <h1 class="text-3xl font-black text-base-content">Bienvenue, {{ user.get_full_name|default:user.email }}</h1>
+                            <p class="text-base-content/60 mt-1">Voici l'état de votre compte Benin Match.</p>
+                        </div>
+                        <!-- Mobile Toggle (Visible seulement sur mobile, en haut à droite) -->
+                        <label for="my-drawer" class="lg:hidden btn btn-square btn-ghost">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        </label>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-base-content">{{ stats.visits }}</div>
+                                <div class="text-xs uppercase tracking-widest text-base-content/50">Visites</div>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.5 9l2.5-2.5M17.5 9l2.5-2.5" /></svg>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-base-content">{{ stats.new_likes }}</div>
+                                <div class="text-xs uppercase tracking-widest text-base-content/50">Nouveaux Likes</div>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-black text-base-content">{{ stats.new_messages }}</div>
+                                <div class="text-xs uppercase tracking-widest text-base-content/50">Messages</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Completeness Card -->
+                    <div class="bg-gradient-to-br from-[#09090b] to-base-200 border border-white/10 p-6 md:p-8 rounded-3xl mb-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </div>
+                        
+                        <h2 class="text-xl font-black text-base-content mb-4 relative z-10">Complétude du Profil</h2>
+                        
+                        <!-- Progress Bar -->
+                        <div class="mb-2 relative z-10">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-bold text-base-content">État actuel</span>
+                                <span class="text-sm font-bold text-primary">{{ completion }}%</span>
+                            </div>
+                            <progress class="progress progress-primary w-full" value="{{ completion }}" max="100"></progress>
+                        </div>
+                        
+                        <p class="text-sm text-base-content/60 relative z-10">
+                            {% if completion < 100 %}
+                                Complète ton profil à 100% pour apparaître en premier dans les recherches !
+                                <a href="{% url 'profiles:edit' %}" class="text-primary font-bold underline ml-2">Compléter</a>
+                            {% else %}
+                                Félicitations ! Ton profil est complet et optimisé.
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Recent Activity (Placeholder) -->
+                    <div class="bg-base-200/30 border border-white/5 rounded-3xl p-6">
+                        <h3 class="text-xl font-black text-base-content mb-4 border-l-4 border-primary pl-3">Activité Récente</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-4 pb-4 border-b border-white/5 last:border-0 last:pb-0">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden flex-shrink-0">
+                                    <!-- Avatar générique pour les visiteurs -->
+                                    <img src="https://ui-avatars.com/api/?name=Visiteur&background=f97316&color=fff" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-base-content">Nouvelle visite sur ton profil</p>
+                                    <p class="text-xs text-base-content/50">Il y a 5 minutes</p>
+                                </div>
+                            </li>
+                             <li class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 text-secondary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.5 9l2.5-2.5M17.5 9l2.5-2.5" /></svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-base-content">Nouveau Like reçu</p>
+                                    <p class="text-xs text-base-content/50">Il y a 2 heures</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="mt-6 text-center">
+                            <a href="#" class="text-sm font-bold text-primary hover:underline">Voir toute l'activité</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

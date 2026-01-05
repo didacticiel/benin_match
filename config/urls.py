@@ -4,42 +4,33 @@ from django.conf import settings
 from django.conf.urls.static import static 
 
 urlpatterns = [
-    # ----------------------------------------------------
-    # 1. ADMIN DJANGO
-    # ----------------------------------------------------
+    # 1. ADMIN
     path('admin/', admin.site.urls),
 
-    # ----------------------------------------------------
-    # 2. FRONTEND DJANGO / HTMX (PAGES HTML)
-    # ----------------------------------------------------
-    
-    # 2.1. CORE (Page d'accueil, À propos, Contact)
+    # 2. CORE (Home, About, Contact)
     path('', include('apps.core.urls', namespace='core')),
     
-    # 2.2. USERS (Inscription, Connexion, Déconnexion)
-    # On utilise 'users' comme namespace pour correspondre aux templates
+    # 3. USERS (Inscription, Login)
     path('users/', include('apps.users.urls', namespace='users')),
     
-    # 2.3. BLOG (Affichage public des articles)
+    # 4. PROFILES (Liste, Détail, Édition) <--- C'EST CE QUI MANQUAIT
+    path('profiles/', include('apps.profiles.urls', namespace='profiles')),
+    
+    # 5. BLOG
     path('blog/', include('apps.blog.urls', namespace='blog')),
     
-    # 2.4. CKEDITOR (Éditeur pour l'admin/blog)
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    # 6. MESSAGING (Messages) - Pour les liens dans la navbar
+    # path('messages/', include('apps.messaging.urls', namespace='messaging')),
     
-    # ----------------------------------------------------
-    # 3. APPS FUTURES (Commentées pour ne pas planter)
-    # ----------------------------------------------------
-    # path('profiles/', include('apps.profiles.urls', namespace='profiles')),
+    # 7. SEARCH (Recherche)
     # path('search/', include('apps.search.urls', namespace='search')),
-    # path('messaging/', include('apps.messaging.urls', namespace='messaging')),
+    
+    # 8. CKEDITOR
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
-# ----------------------------------------------------
-# 4. FICHIERS STATIQUES, MÉDIAS ET DEBUG TOOLBAR
-# ----------------------------------------------------
-
+# 9. STATIC & MEDIA
 if settings.DEBUG:
-    # 4.1. Debug Toolbar (Optionnel, assure-toi d'avoir 'debug_toolbar' dans INSTALLED_APPS)
     try:
         import debug_toolbar
         urlpatterns = [
@@ -48,8 +39,5 @@ if settings.DEBUG:
     except ImportError:
         pass
     
-    # 4.2. Fichiers Médias (Images uploadées)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-    # 4.3. Fichiers Statiques (CSS/JS) - Servis localement
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

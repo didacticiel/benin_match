@@ -6,26 +6,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Mettre ton logo ici -->
+    <title>{% block title %}Benin Match | Rencontre n°1 pour les Béninois et la Diaspora{% endblock title %}</title>
+    
+    <meta name="description" content="{% block description %}Le site de rencontre numéro 1 au Bénin. Rencontrez des célibataires sérieux au Bénin (Cotonou, Porto-Novo, Parakou) et dans la Diaspora (France, USA, Canada).{% endblock %}">
+    <meta name="keywords" content="rencontre bénin, célibataire bénin, site de rencontre bénin, diaspora béninoise, mariage, amour, afro dating, cotonou dating">
+    <meta name="author" content="Benin Match">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}Rencontre Bénin & Diaspora | Benin Match{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Le site de rencontre numéro 1 au Bénin et pour la Diaspora.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/share-benin-match.jpg' %}{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="Benin Match">
+    <meta property="og:locale" content="fr_FR">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Rencontre Bénin & Diaspora | Benin Match{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Rencontrez des Béninois sérieux au pays et dans la diaspora.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{% static 'images/share-benin-match.jpg' %}{% endblock %}">
+
     <link rel="icon" type="image/png" href="{% static 'img/logo-benin-match.png' %}">
     
-    <title>{% block title %}Benin Match{% endblock title %}</title>
-    
-    <!-- Police Inter (cohérente avec les formulaires) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- CSS Compilé (Tailwind v4 + DaisyUI) -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
-    <!-- Alpine.js & HTMX -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* Effet verre sur la barre de nav */
         .glass-nav {
-            background: rgba(var(--b1), 0.8); /* Noir avec transparence */
+            background: rgba(var(--b1), 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
@@ -69,10 +80,15 @@
         <div class="navbar-center hidden lg:flex">
             
             <ul class="flex items-center gap-8 font-bold uppercase text-[10px] tracking-[0.2em] text-base-content/70">  
-                <li><a href="#" class="hover:text-primary transition-colors">Rencontres</a></li>
-                <li><a href="#" class="hover:text-secondary transition-colors">Profils</a></li>
-                <li><a href="#" class="hover:text-primary transition-colors">Blog</a></li>
-                <li><a href="#" class="hover:text-secondary transition-colors">Conseils</a></li>
+                <li><a href="{% url 'profiles:list' %}" class="hover:text-primary transition-colors">Rencontres</a></li>
+                <!-- Si connecté -> Mon Profil, Sinon -> Inscription -->
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profiles:my_profile' %}" class="hover:text-secondary transition-colors">Mon Profil</a></li>
+                {% else %}
+                    <li><a href="{% url 'users:register' %}" class="hover:text-secondary transition-colors">Inscription</a></li>
+                {% endif %}
+                <li><a href="{% url 'blog:post_list' %}" class="hover:text-primary transition-colors">Blog</a></li>
+                <li><a href="{% url 'core:contact' %}" class="hover:text-secondary transition-colors">Contact</a></li>
             </ul>
         </div>
 
@@ -104,7 +120,7 @@
                             {{ user.get_full_name|default:user.email }}
                         </li>
                         <div class="divider my-0 opacity-10"></div>
-                        <li><a href="#">
+                        <li><a href="{% url 'profiles:my_profile' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg> 
                             Mon Profil
                         </a></li>
@@ -112,7 +128,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                             Messages
                         </a></li>
-                        <li><a href="#">
+                        <li><a href="{% url 'profiles:edit' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                             Paramètres
                         </a></li>
@@ -148,16 +164,20 @@
          x-transition:enter-end="opacity-100 translate-y-0"
          class="lg:hidden bg-base-200 border-b border-white/5 shadow-2xl">
         <ul class="menu p-4 gap-2 font-black uppercase text-xs tracking-widest">
-            <li><a href="#">Rencontres</a></li>
-            <li><a href="#">Profils</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="{% url 'profiles:list' %}">Rencontres</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'profiles:my_profile' %}">Mon Profil</a></li>
+                <li><a href="#">Messages</a></li>
+            {% else %}
+                <li><a href="{% url 'users:register' %}">Inscription</a></li>
+            {% endif %}
+            <li><a href="{% url 'blog:post_list' %}">Blog</a></li>
+            <li><a href="{% url 'core:contact' %}">Contact</a></li>
             {% if not user.is_authenticated %}
                 <div class="divider"></div>
                 <li><a href="{% url 'users:login' %}">Connexion</a></li>
-                <li><a href="{% url 'users:register' %}" class="text-primary">S'inscrire</a></li>
             {% else %}
                 <div class="divider"></div>
-                <li><a href="#">Mon Profil</a></li>
                 <li><a href="{% url 'users:logout' %}">Déconnexion</a></li>
             {% endif %}
         </ul>
@@ -166,7 +186,7 @@
 
     <!-- CONTENU PRINCIPAL -->
     <div class="pt-0"> 
-        {% block content %}{% endblock content %}
+        {% block content %}{% endblock %}
     </div>
 
     <!-- FOOTER -->
@@ -190,8 +210,8 @@
                 <div>
                     <h4 class="font-bold uppercase text-[10px] tracking-[0.2em] mb-6 text-primary">Explorer</h4>
                     <ul class="space-y-4 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Recherche</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Blog & Conseils</a></li>
+                        <li><a href="{% url 'profiles:list' %}" class="hover:text-white transition-colors">Recherche</a></li>
+                        <li><a href="{% url 'blog:post_list' %}" class="hover:text-white transition-colors">Blog & Conseils</a></li>
                         <li><a href="#" class="hover:text-primary transition-colors">Succès Stories</a></li>
                     </ul>
                 </div>
@@ -201,7 +221,7 @@
                         <li><a href="#" class="hover:text-white transition-colors">Mentions Légales</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Confidentialité</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Sécurité</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
             </div>

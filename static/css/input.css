@@ -4,16 +4,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* 2. CONFIGURATION DAISYUI */
+/* 2. CONFIGURATION DAISYUI & THÈME */
 @plugin "daisyui" {
   themes: light, dark;
-  default-theme: "dark";
-}
-
-/* 3. CONFIGURATION DU THÈME */
-@plugin "daisyui" {
-  themes: light, dark;
-  default-theme: "dark"; // On commence en Dark Mode
+  default-theme: "dark"; /* On commence en Dark Mode */
 }
 
 @theme {
@@ -24,8 +18,8 @@
   --color-secondary: #8b5cf6;  /* Violet 500 */
   --color-accent: #c026d3;     /* Fuchsia */
   
-  /* --- COULEURS BOUTONS (Primary/Secondary) --- */
-  /* On force les couleurs des boutons, mais PAS le fond des boutons pour laisser DaisyUI gérer la transparence */
+  /* --- COULEURS BOUTONS --- */
+  /* On force les couleurs des boutons, mais PAS le fond de page */
   --p: #f97316;       /* Primary Background (Orange) */
   --pf: #ffffff;      /* Primary Text (Blanc) */
   --pc: #ffffff;
@@ -35,12 +29,9 @@
   --sc: #ffffff;
 
   /* --- IMPORTANT : NE PAS DÉFINIR --b1, --b2, --bc ICI --- */
-  /* En ne les définissant pas ici, DaisyUI utilise ses propres valeurs par défaut :
-       - Mode Dark : --b1 est Noir (#09090b), --bc est Blanc.
-       - Mode Light : --b1 est Blanc (#ffffff), --bc est Noir.
-  */
+  /* DaisyUI gère cela tout seul grâce au 'themes: light, dark' */
 
-  /* ANIMATIONS (Globales) */
+  /* ANIMATIONS */
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -52,14 +43,14 @@
   }
 }
 
-/* 4. COUCHES DE STYLES */
+/* 3. COUCHES DE STYLES */
 
-/* Fix global : Focus Ring Orange (au lieu du violet) */
+/* Fix global : Focus Ring Orange */
 @layer base {
   .btn-primary:focus-visible,
   .input-bordered:focus-visible,
   .textarea-bordered:focus-visible {
-    outline: 2px solid #f97316; /* Orange */
+    outline: 2px solid #f97316;
     outline-offset: 2px;
   }
   
@@ -72,29 +63,27 @@
 }
 
 @layer components {
-  /* Scrollbar personnalisée Orange (surligne très bien sur fond noir) */
+  /* Scrollbar personnalisée Orange */
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: var(--b1); }
   ::-webkit-scrollbar-thumb { 
-    background: #f97316; /* Orange */
+    background: #f97316;
     border-radius: 10px; 
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #ea580c;
   }
 
-  /* Boutons de filtres personnalisés */
+  /* Boutons de filtres */
   .filter-btn {
     @apply px-6 py-2 rounded-full border-2 border-base-300 font-bold text-sm uppercase tracking-wider transition-all duration-300 cursor-pointer bg-base-200;
   }
 
   .filter-btn.active {
-    /* Active state en Violet (pour contraster avec les boutons d'action Orange) */
     @apply border-secondary bg-secondary text-secondary-content scale-105 shadow-lg shadow-secondary/30;
   }
 
   .filter-btn:hover:not(.active) {
-    /* Hover en Orange subtil */
     @apply border-primary/50 bg-primary/10 text-primary;
   }
 
@@ -116,7 +105,7 @@
 @layer utilities {
   .animate-fade-in { animation: fade-in 0.6s ease-out; }
   
-  /* Effet verre moderne (Glassmorphism) sur fond noir */
+  /* Effet verre */
   .glass-effect {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
