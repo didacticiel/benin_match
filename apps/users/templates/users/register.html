@@ -1,79 +1,94 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inscription - Benin Match{% endblock %}
+
 {% block content %}
-<main class="relative min-h-screen flex items-center justify-center overflow-hidden bg-base-100 pt-32 pb-32 py-5 px-4 transition-colors duration-500">
+<main class="relative min-h-screen flex items-center justify-center overflow-hidden bg-base-100 pt-20 pb-20 py-5 px-4">
+    
+    <!-- Fond Halos (Orange/Violet) -->
     <div class="absolute inset-0 z-0 pointer-events-none">
-        <!-- Halos violets (primary et purple-600) -->
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/10 rounded-full blur-[100px]"></div>
-        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-50"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]"></div>
     </div>
 
     <div class="max-w-md w-full z-10">
-        <div class="bg-base-200/50 backdrop-blur-2xl border border-base-content/10 p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden group text-base-content">
+        <div class="bg-base-200/50 backdrop-blur-2xl border border-base-content/10 p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden text-base-content">
             
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-colors duration-700"></div>
+            <!-- Décoration -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-3xl"></div>
 
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-black tracking-tighter mb-2">Rejoindre</h2>
-                <p class="text-base-content/60 text-sm">Créez votre accès à <span class="text-primary font-bold">Abdoul Didacticiel</span></p>
+            <div class="text-center mb-10 relative z-10">
+                <h2 class="text-4xl font-black tracking-tighter mb-2 text-base-content">Rejoindre</h2>
+                <p class="text-base-content/60 text-sm">Créez votre accès à <span class="text-primary font-bold">Benin Match</span></p>
             </div>
 
-            {% if form.errors %}
-            <div class="bg-error/10 border border-error/50 text-error p-4 rounded-2xl mb-6 text-xs">
-                <p class="font-bold mb-1">Veuillez corriger les erreurs suivantes :</p>
+            <!-- Erreurs Générales -->
+            {% if form.non_field_errors %}
+            <div class="bg-error/10 border border-error/50 text-error p-4 rounded-2xl mb-6 text-xs relative z-10">
+                <p class="font-bold mb-1">Erreur :</p>
                 <ul class="list-disc pl-5">
-                    {% for field in form %}
-                        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
-                    {% endfor %}
                     {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
                 </ul>
             </div>
             {% endif %}
             
-            <div class="divider before:bg-base-content/10 after:bg-base-content/10 text-[10px] text-base-content/50 uppercase font-black tracking-widest">S'inscrire avec Google</div>
-            <div class="flex justify-center mb-6">
+            <!-- Google Button -->
+            <div class="divider before:bg-base-content/10 after:bg-base-content/10 text-[10px] text-base-content/50 uppercase font-black tracking-widest relative z-10">S'inscrire avec Google</div>
+            <div class="flex justify-center mb-6 relative z-10">
                 <div id="googleBtnContainer" class="w-full min-h-[44px]"></div>
             </div>
 
-            <div class="divider before:bg-base-content/10 after:bg-base-content/10 text-[10px] text-base-content/50 uppercase font-black tracking-widest mb-6">Ou s'inscrire avec</div>
+            <div class="divider before:bg-base-content/10 after:bg-base-content/10 text-[10px] text-base-content/50 uppercase font-black tracking-widest mb-6 relative z-10">Ou s'inscrire avec</div>
             
-            <form class="space-y-5" method="POST">
+            <!-- Formulaire -->
+            <form class="space-y-5 relative z-10" method="POST">
                 {% csrf_token %}
 
-                <div class="form-control group/input">
-                    <label class="label opacity-60 text-[10px] uppercase tracking-widest font-bold">Email</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-base-content/50">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" /></svg>
-                        </span>
-                        <input type="email" name="email" required value="{{ form.email.value|default:'' }}"
-                               class="input input-bordered w-full pl-12 bg-base-100 border-base-content/10 focus:border-primary focus:bg-base-100 transition-all rounded-2xl text-base-content" 
-                               placeholder="nom@exemple.com">
+                <div class="form-control">
+                    <input type="email" name="email" required 
+                           class="input input-bordered w-full bg-base-100 border-base-content/10 focus:border-primary rounded-2xl text-base-content" 
+                           placeholder="Votre email">
+                    {% for error in form.email.errors %}
+                        <p class="text-error text-xs mt-1 ml-2">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                         <input type="text" name="first_name" required class="input input-bordered w-full bg-base-100 border-base-content/10 focus:border-secondary rounded-2xl text-sm" placeholder="Prénom">
+                    </div>
+                    <div class="form-control">
+                         <input type="text" name="last_name" required class="input input-bordered w-full bg-base-100 border-base-content/10 focus:border-secondary rounded-2xl text-sm" placeholder="Nom">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-5">
-                    <div class="form-control group/input">
-                        <label class="label opacity-60 text-[10px] uppercase tracking-widest font-bold">Mot de passe</label>
+                    <div class="form-control">
                         <input type="password" name="password1" required 
                                class="input input-bordered w-full bg-base-100 border-base-content/10 focus:border-primary rounded-2xl text-base-content" 
-                               placeholder="••••••••">
+                               placeholder="Mot de passe">
+                         {% for error in form.password1.errors %}
+                            <p class="text-error text-xs mt-1">{{ error }}</p>
+                        {% endfor %}
                     </div>
-                    <div class="form-control group/input">
-                        <label class="label opacity-60 text-[10px] uppercase tracking-widest font-bold">Confirmation</label>
+                    <div class="form-control">
                         <input type="password" name="password2" required 
                                class="input input-bordered w-full bg-base-100 border-base-content/10 focus:border-primary rounded-2xl text-base-content" 
-                               placeholder="••••••••">
+                               placeholder="Confirmer mot de passe">
+                         {% for error in form.password2.errors %}
+                            <p class="text-error text-xs mt-1">{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <!-- Bouton VIOLET -->
+                <!-- Bouton Primary (Orange) -->
                 <button type="submit" class="btn btn-primary w-full rounded-2xl h-14 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
                     Créer mon compte
                 </button>
             </form>
 
-            <div class="text-center mt-8">
+            <div class="text-center mt-8 relative z-10">
                 <p class="text-sm text-base-content/60">
                     Déjà membre ? 
                     <a href="{% url 'users:login' %}" class="font-bold text-primary hover:text-base-content transition-colors ml-1">Connectez-vous</a>
@@ -83,10 +98,11 @@
     </div>
 </main>
 
+<!-- Script Google -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
     function handleCredentialResponse(response) {
-        fetch("{% url 'users_api:google_auth' %}", {
+        fetch("{% url 'users:google_auth' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -96,14 +112,13 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.access) {
-                localStorage.setItem('access_token', data.access);
+            if (data.success) {
                 window.location.href = data.redirect_url || "/";
             } else {
-                alert("Erreur: " + (data.error || "Échec"));
+                alert("Erreur: " + (data.error || "Échec de l'authentification"));
             }
         })
-        .catch(err => console.error("Erreur d'appel API:", err));
+        .catch(err => console.error("Erreur:", err));
     }
 
     function initGoogleAuth() {
@@ -115,13 +130,18 @@
                 ux_mode: "popup",
                 context: "signup"
             });
-            google.accounts.id.renderButton(container, { theme: "filled_black", size: "large", width: "100%", shape: "pill" });
+            google.accounts.id.renderButton(container, { 
+                theme: "filled_black", 
+                size: "large", 
+                width: "100%", 
+                shape: "pill",
+                logo_alignment: "center"
+            });
         } else {
             setTimeout(initGoogleAuth, 100);
         }
     }
 
     document.addEventListener("DOMContentLoaded", initGoogleAuth);
-    document.addEventListener("htmx:afterSwap", function(event) { initGoogleAuth(); });
 </script>
 {% endblock %}

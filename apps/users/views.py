@@ -1,165 +1,85 @@
-# apps/users/views.py
-
-from rest_framework import generics, permissions, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
-from django.contrib.auth import get_user_model
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.conf import settings
+from django.http import JsonResponse
+import json
 
-from django.contrib.auth.forms import AuthenticationForm
-from .forms import CustomUserCreationForm
-
-# Importations spécifiques à l'Auth Google (méthode ID Token)
+# Imports pour Google OAuth
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 
-from .serializers import (
-    UserRegisterSerializer, 
-    UserSerializer, 
-    UserAvatarSerializer
-)
-
-User = get_user_model()
-
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .models import User
 
 # =========================================================================
-# 1. AUTHENTIFICATION DE BASE (Basée sur Simple JWT)
+# 1. INSCRIPTION (HTML)
 # =========================================================================
-
-class UserRegisterView(generics.CreateAPIView):
-    """
-    Endpoint POST /api/v1/users/register/
-    Permet l'enregistrement d'un nouvel utilisateur (email/password).
-    """
-    queryset = User.objects.all()
-    serializer_class = UserRegisterSerializer
-    permission_classes = [permissions.AllowAny]
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        
-        # Génère les tokens JWT immédiatement après l'inscription (Auto-login)
-        user = serializer.instance
-        refresh = RefreshToken.for_user(user)
-        
-        return Response(
-            {
-                "message": _("Compte créé avec succès. Vous êtes maintenant connecté."), 
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
-                "user": UserSerializer(user).data
-            }, 
-            status=status.HTTP_201_CREATED, 
-        )
-
-
-# =========================================================================
-# 2. GESTION DU PROFIL (L'utilisateur connecté)
-# =========================================================================
-
-class UserDetailView(generics.RetrieveUpdateAPIView):
-    """
-    Endpoint GET/PUT /api/v1/users/me/
-    Permet de visualiser et mettre à jour le profil de l'utilisateur connecté.
-    """
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
-
-# =========================================================================
-# 3. LOGOUT (Blacklisting du Refresh Token)
-# =========================================================================
-
-class LogoutView(APIView):
-    """
-    Endpoint POST /api/v1/users/logout/
-    Invalide la session en blacklistant le Refresh Token.
-    """
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        try:
-            refresh_token = request.data.get("refresh")
-            if refresh_token:
-                token = RefreshToken(refresh_token)
-                token.blacklist()
-                return Response({"message": _("Déconnexion réussie.")}, status=status.HTTP_205_RESET_CONTENT)
-            else:
-                return Response(
-                    {"detail": _("Token de rafraîchissement manquant.")}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        except Exception:
-            return Response(
-                {"detail": _("Token de rafraîchissement invalide ou déjà utilisé.")}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-
-# =========================================================================
-# 4. GESTION DES FICHIERS (Avatar)
-# =========================================================================
-
-class AvatarUploadView(APIView):
-    """
-    Endpoint PATCH /api/v1/users/me/avatar/
-    Permet de télécharger l'avatar de l'utilisateur.
-    """
-    parser_classes = [MultiPartParser, FormParser]  
-    permission_classes = [permissions.IsAuthenticated]
-
-    def patch(self, request, *args, **kwargs):
-        user = request.user
-        
-        if 'avatar' not in request.FILES:
-            return Response(
-                {"avatar": _("Veuillez fournir un fichier d'image.")}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-            
-        serializer = UserAvatarSerializer(
-            user, 
-            data={'avatar': request.FILES['avatar']}, 
-            partial=True
-        )
-            
-        if serializer.is_valid():
-            serializer.save()
-            return Response(UserSerializer(user).data) 
-            
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# =========================================================================
-# 5. AUTHENTIFICATION GOOGLE (MÉTHODE ID TOKEN) - VERSION CORRIGÉE
-# =========================================================================
-
-@api_view(["POST"])
-@permission_classes([permissions.AllowAny])
-def google_auth(request):
-    """
-    Endpoint POST /api/v1/users/google-auth/
-    Vérifie le jeton ID envoyé par le frontend et connecte l'utilisateur.
-    """
-    id_token_str = request.data.get("id_token")
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) 
+            return redirect('core:home')
+    else:
+        form = CustomUserCreationForm()
     
-    if not id_token_str:
-        return Response({"error": "Jeton manquant"}, status=status.HTTP_400_BAD_REQUEST)
+    return render(request, 'users/register.html', {
+        'form': form,
+        'GOOGLE_OAUTH_CLIENT_ID': settings.GOOGLE_OAUTH_CLIENT_ID
+    })
+
+# =========================================================================
+# 2. CONNEXION (HTML Class-Based)
+# =========================================================================
+class CustomLoginView(LoginView):
+    form_class = CustomAuthenticationForm
+    template_name = 'users/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('core:home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['GOOGLE_OAUTH_CLIENT_ID'] = settings.GOOGLE_OAUTH_CLIENT_ID
+        return context
+
+# =========================================================================
+# 3. DÉCONNEXION
+# =========================================================================
+from django.contrib.auth.decorators import login_required
+@login_required
+def logout_view(request):
+    """Affiche une page de confirmation avant de déconnecter."""
+    if request.method == 'POST':
+        logout(request)
+        return redirect('core:home')
+    
+    # Si c'est un GET, on affiche le template de confirmation
+    return render(request, 'users/logout.html')
+
+# =========================================================================
+# 4. GOOGLE AUTH (AJAX - Appelée par le JS)
+# =========================================================================
+def google_auth_view(request):
+    """
+    Endpoint pour le bouton "Se connecter avec Google".
+    Reçoit le token ID, valide avec Google, connecte l'utilisateur et renvoie du JSON.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
     try:
-        # 1. Validation du jeton auprès de Google
-        # Cela garantit que les infos (email, nom) ne sont pas falsifiées
+        data = json.loads(request.body)
+        id_token_str = data.get("id_token")
+        
+        if not id_token_str:
+            return JsonResponse({"error": "Jeton manquant"}, status=400)
+
+        # 1. Validation du token via les serveurs Google
         id_info = id_token.verify_oauth2_token(
             id_token_str, 
             google_requests.Request(), 
@@ -171,78 +91,38 @@ def google_auth(request):
         last_name = id_info.get('family_name', '')
         
         if not email:
-            return Response({"error": "Email non fourni par Google"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"error": "Email non fourni par Google"}, status=400)
 
-        # 2. Gestion de l'utilisateur en DB
+        # 2. Création ou récupération de l'utilisateur
         user, created = User.objects.get_or_create(email=email)
         
         if created:
-            user.username = email 
+            user.username = email
             user.first_name = first_name
             user.last_name = last_name
-           
-            if hasattr(user, 'registration_method'):
-                user.registration_method = 'google'
+            user.registration_method = 'google'
             user.set_unusable_password()
             user.save()
         else:
-            # Sécurité: empêche de bypasser un compte existant créé par mot de passe
-            if hasattr(user, 'registration_method') and user.registration_method != 'google' and user.has_usable_password():
-                 return Response({
-                    "error": "Ce compte existe déjà avec un mot de passe classique."
-                }, status=status.HTTP_403_FORBIDDEN)
+            # Sécurité : Pas de bypass de compte email classique
+            if user.registration_method != 'google' and user.has_usable_password():
+                 return JsonResponse({
+                    "error": "Ce compte existe déjà avec un mot de passe. Connectez-vous avec votre email."
+                }, status=403)
 
-        # 3. Authentification session Django (Pour les templates)
+        # 3. Connexion session Django
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-        # 4. Génération JWT (Pour les appels API futurs)
-        refresh = RefreshToken.for_user(user)
-
-        return Response({
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-            "redirect_url": "/"
-        }, status=status.HTTP_200_OK)
+        # 4. Réponse succès
+        return JsonResponse({
+            "success": True,
+            "redirect_url": "/" 
+        }, status=200)
 
     except ValueError:
-        return Response({"error": "Jeton Google invalide ou expiré"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"error": "Jeton Google invalide ou expiré"}, status=400)
     except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-# =========================================================================
-# 6. VUES BASIQUES POUR L'INSCRIPTION ET LA CONNEXION (Django Forms)
-# =========================================================================
+        # Log l'erreur en prod
+        return JsonResponse({"error": "Une erreur serveur est survenue"}, status=500)
+    
 
-def register_view(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Connexion automatique après inscription
-            return redirect('core:home')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'users/register.html', {
-        'form': form,
-        'GOOGLE_OAUTH_CLIENT_ID': settings.GOOGLE_OAUTH_CLIENT_ID
-    })
-
-
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('core:home')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'users/login.html', {
-        'form': form,
-        'GOOGLE_OAUTH_CLIENT_ID': settings.GOOGLE_OAUTH_CLIENT_ID
-    })
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('core:home')

@@ -1,9 +1,7 @@
-from django.views.generic import TemplateView
-from apps.blog.models import Post
-from apps.portfolio.models import Project
-from django.views.generic import CreateView
+from django.views.generic import TemplateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from apps.blog.models import Post  # On garde le blog pour le contenu éditorial
 from .forms import ContactForm
 
 class HomePageView(TemplateView):
@@ -12,23 +10,18 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # 1. Les 3 derniers articles de blog (Triés par date de publication)
+        # Afficher les 3 derniers articles du blog (pour la crédibilité et le SEO)
         context['latest_posts'] = Post.objects.filter(
             status='published'
         ).select_related('author').order_by('-published_at')[:3]
         
-        # 2. Les 3 projets mis en avant (ou les 3 plus récents)
-        # On utilise select_related pour la catégorie afin d'optimiser les requêtes SQL
-        context['featured_projects'] = Project.objects.filter(
-            is_published=True,
-            is_featured=True  # Assure-toi de cocher cette case dans l'admin
-        ).select_related('category').prefetch_related('technologies').order_by('order')[:3]
+        # Ici tu pourras ajouter plus tard :
+        # context['featured_profiles'] = Profile.objects.filter(is_featured=True)
         
         return context
 
 class AboutPageView(TemplateView):
     template_name = "core/about.html"
-
 
 class ContactPageView(CreateView):
     template_name = "core/contact.html"
@@ -37,8 +30,5 @@ class ContactPageView(CreateView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Votre message a été envoyé avec succès ! Je vous répondrai très prochainement.")
+        messages.success(self.request, "Votre message a été envoyé avec succès !")
         return super().form_valid(form)
-class ServicePageView(TemplateView):
-    template_name = "core/services.html"
-    

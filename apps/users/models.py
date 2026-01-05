@@ -10,24 +10,23 @@ REGISTRATION_CHOICES = [
 ]
 
 class User(AbstractUser):
-    
     # --- Champs d'Authentification ---
     email = models.EmailField(_("adresse e-mail"), unique=True, null=False, blank=False)
     
+    # On force Django à utiliser l'email comme identifiant unique
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"] 
+    # Le username est requis par défaut dans AbstractUser
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"] 
 
-    # --- Champs pour le Profil ---
-    
+    # --- Champs Profil ---
     first_name = models.CharField(_("Prénom"), max_length=150, blank=False, null=False)
     last_name = models.CharField(_("Nom"), max_length=150, blank=False, null=False)
     
     registration_method = models.CharField(
         _("Méthode d'enregistrement"),
         max_length=20, 
-        choices=REGISTRATION_CHOICES, 
         default='email',
-        help_text=_("Méthode utilisée par l'utilisateur pour créer son compte.")
+        editable=False, # On ne change pas la méthode a posteriori
     )
     
     avatar = models.ImageField(
@@ -35,9 +34,13 @@ class User(AbstractUser):
         upload_to='avatars/', 
         null=True, 
         blank=True,
-        help_text=_("Image de profil de l'utilisateur. Stockée dans le dossier 'avatars/'.")
+        default='avatars/default.png'
     )
-    
-    # Ajout d'une méthode str pour la lisibilité
+
+    def get_full_name(self):
+        """Retourne le prénom et nom avec une majuscule"""
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
     def __str__(self):
         return self.email

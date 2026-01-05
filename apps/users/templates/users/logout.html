@@ -1,16 +1,55 @@
-{% if user.is_authenticated %}
-    <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-            <div class="w-10 rounded-full">
-                <img src="{{ user.avatar.url|default:'https://ui-avatars.com/api/?name='|add:user.username }}" />
-            </div>
-        </label>
-        <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-            <li><a class="justify-between">Profil <span class="badge">Nouveau</span></a></li>
-            <li><a href="{% url 'users:logout' %}" class="text-error">Déconnexion</a></li>
-        </ul>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Déconnexion - Benin Match{% endblock %}
+
+{% block content %}
+<main class="relative min-h-screen flex items-center justify-center overflow-hidden bg-base-100 pt-20 pb-20 py-5 px-4">
+    
+    <!-- Fond Halos (Rouge/Warning + Violet) -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <!-- Halo Error/Warning -->
+        <div class="absolute top-1/3 right-1/3 w-96 h-96 bg-error/20 rounded-full blur-[120px] animate-pulse"></div>
+        <!-- Halo Violet -->
+        <div class="absolute bottom-1/3 left-1/3 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]"></div>
     </div>
-{% else %}
-    <a href="{% url 'users:login' %}" class="btn btn-ghost">Connexion</a>
-    <a href="{% url 'users:signup' %}" class="btn btn-primary">S'inscrire</a>
-{% endif %}
+
+    <div class="max-w-md w-full z-10">
+        <div class="bg-base-200/50 backdrop-blur-2xl border border-base-content/10 p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden text-base-content text-center">
+            
+            <!-- Décoration -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-error/20 rounded-full blur-3xl"></div>
+
+            <div class="mb-8 relative z-10">
+                <!-- Icône Doute/Warning -->
+                <div class="mx-auto w-20 h-20 bg-error/10 rounded-full flex items-center justify-center mb-4 text-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-black tracking-tighter mb-2 text-base-content">Déconnexion ?</h2>
+                <p class="text-base-content/60 text-sm">
+                    Es-tu sûr de vouloir quitter <span class="text-primary font-bold">Benin Match</span> ?
+                </p>
+            </div>
+            
+            <!-- Formulaire de déconnexion (POST obligatoire) -->
+            <form method="POST" class="space-y-4 relative z-10">
+                {% csrf_token %}
+                
+                <!-- Bouton Annuler (Gris/Neutre) -->
+                <a href="{% url 'core:home' %}" class="btn btn-ghost w-full rounded-2xl h-14 font-bold border border-base-content/10 hover:bg-base-200">
+                    Annuler
+                </a>
+
+                <!-- Bouton Déconnexion (Warning/Red) -->
+                <button type="submit" class="btn btn-error w-full rounded-2xl h-14 font-bold shadow-lg shadow-error/20 hover:scale-[1.02] transition-transform">
+                    Me déconnecter
+                </button>
+            </form>
+
+        </div>
+    </div>
+</main>
+{% endblock %}

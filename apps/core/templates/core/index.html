@@ -4,110 +4,91 @@
 <main x-data="{ y: 0 }" @scroll.window="y = window.pageYOffset" class="relative overflow-hidden selection:bg-primary/30">
     
     <!-- ============================================ -->
-    <!-- SECTION HERO - Premium avec parallax avancé -->
+    <!-- SECTION HERO - L'Amour a une adresse -->
     <!-- ============================================ -->
     <section class="relative min-h-screen flex items-center justify-center bg-base-100 bg-gradient-to-b from-base-100 via-base-100 to-base-100 dark:from-violet-950/30 dark:via-base-100 dark:to-base-100 transition-colors duration-500 pt-32">
 
         <!-- Background Effects avec parallax -->
         <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <!-- Orbes lumineux animés -->
+            <!-- Halos Orange (Primary) et Violet (Secondary) -->
             <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px]"
                  :style="`transform: translate(${y * -0.2}px, ${y * 0.5}px); opacity: ${1 - y/1000}`"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/10 rounded-full blur-[100px]"
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]"
                  :style="`transform: translate(${y * 0.2}px, ${y * 0.3}px)`"></div>
-            <div class="absolute top-1/2 right-1/3 w-48 h-48 bg-blue-500/5 rounded-full blur-[80px] animate-pulse"></div>
             
             <!-- Grille subtle -->
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
         </div>
 
         <div class="container mx-auto px-4 z-10 text-center relative">
             <!-- Badge animé -->
             <div x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 300)"
                  :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
-                 class="inline-flex items-center gap-2 mb-8 px-5 py-2 border border-primary/30 rounded-full bg-primary/5 backdrop-blur-sm transition-all duration-1000 ease-out group hover:border-primary/50 hover:bg-primary/10">
+                 class="inline-flex items-center gap-2 mb-8 px-5 py-2 border border-secondary/30 rounded-full bg-secondary/5 backdrop-blur-sm transition-all duration-1000 ease-out group hover:border-secondary/50 hover:bg-secondary/10">
                 <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
                 </span>
-                <span class="text-primary text-xs font-bold uppercase tracking-[0.3em]">Disponible pour missions</span>
+                <span class="text-secondary text-xs font-bold uppercase tracking-[0.3em]">Nouveau : Recherche par ville</span>
             </div>
 
-            <!-- Titre principal avec gradient animé -->
+            <!-- Titre principal -->
             <h1 class="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-white mb-8 leading-[0.9] animate-fade-in">
-                ABDOUL <br>
+                BENIN <br>
                 <span class="relative inline-block">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-[gradient_8s_linear_infinite]">
-                        DIDACTICIEL
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-400 to-primary bg-[length:200%_auto] animate-[gradient_8s_linear_infinite]">
+                        MATCH
                     </span>
-                    <span class="absolute -inset-1 bg-gradient-to-r from-primary/20 via-purple-400/20 to-primary/20 blur-2xl -z-10 animate-pulse"></span>
+                    <span class="absolute -inset-1 bg-gradient-to-r from-primary/20 via-pink-400/20 to-primary/20 blur-2xl -z-10 animate-pulse"></span>
                 </span>
             </h1>
 
-            <!-- Description avec mots-clés stylisés -->
-            <p class="max-w-3xl mx-auto text-gray-400 text-lg md:text-xl mb-12 leading-relaxed" style="animation-delay: 200ms;">
-                Expert en <span class="relative inline-block text-white font-semibold group cursor-default">
-                    <span class="relative z-10">Développement Full-Stack</span>
-                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary/0 via-primary/50 to-primary/0 group-hover:h-full group-hover:via-primary/10 transition-all duration-300 -z-10"></span>
-                </span>, 
-                <span class="relative inline-block text-white font-semibold group cursor-default">
-                    <span class="relative z-10">DevOps</span>
-                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/0 via-blue-500/50 to-blue-500/0 group-hover:h-full group-hover:via-blue-500/10 transition-all duration-300 -z-10"></span>
-                </span> et 
-                <span class="relative inline-block text-white font-semibold group cursor-default">
-                    <span class="relative z-10">Cybersécurité</span>
-                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-red-500/0 via-red-500/50 to-red-500/0 group-hover:h-full group-hover:via-red-500/10 transition-all duration-300 -z-10"></span>
-                </span>
+            <!-- Description -->
+            <p class="max-w-3xl mx-auto text-gray-400 text-lg md:text-xl mb-12 leading-relaxed">
+                La plateforme de rencontre <span class="text-white font-bold">sérieuse</span> et <span class="text-white font-bold">gratuite</span> pour les Béninois et la Diaspora.
                 <br class="hidden md:block">
-                Je transforme vos idées en <span class="text-white font-semibold">architectures digitales robustes</span>.
+                Trouvez l'amour, l'amitié ou le sérieux, entre gens qui vous ressemblent.
             </p>
 
-            <!-- CTA Buttons -->
-            <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-16" style="animation-delay: 400ms;">
-                <a href="#services" 
+            <!-- CTA Buttons (Genre Split) -->
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-16">
+                <a href="{% url 'users:register' %}" 
                    class="group relative btn btn-primary btn-lg rounded-full px-10 md:px-14 border-none overflow-hidden hover:scale-105 transition-transform">
                     <span class="relative z-10 flex items-center gap-2">
-                        Mes Services
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
+                        👩 Je suis une Femme
                     </span>
-                    <span class="absolute inset-0 bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </a>
                 
-                <a href="{% url 'portfolio:list' %}" 
-                   class="group btn btn-outline btn-lg rounded-full px-10 md:px-14 border-2 border-white/20 text-white hover:bg-white hover:text-black hover:border-white transition-all relative overflow-hidden">
+                <a href="{% url 'users:register' %}" 
+                   class="group btn btn-secondary btn-lg rounded-full px-10 md:px-14 border-none shadow-lg hover:scale-105 transition-transform">
                     <span class="relative z-10 flex items-center gap-2">
-                        Portfolio
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:rotate-45 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
+                        👨 Je suis un Homme
                     </span>
                 </a>
             </div>
 
             <!-- Stats en bas du hero -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto pt-8 border-t border-white/10" style="animation-delay: 600ms;">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto pt-8 border-t border-white/10">
                 <div class="text-center group cursor-default">
-                    <div class="text-3xl md:text-4xl font-black text-primary mb-2 group-hover:scale-110 transition-transform">5+</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Projets livrés</div>
+                    <div class="text-3xl md:text-4xl font-black text-primary mb-2 group-hover:scale-110 transition-transform">5K+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Profils Actifs</div>
                 </div>
                 <div class="text-center group cursor-default">
-                    <div class="text-3xl md:text-4xl font-black text-emerald-500 mb-2 group-hover:scale-110 transition-transform">5+</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Années d'expérience</div>
+                    <div class="text-3xl md:text-4xl font-black text-emerald-500 mb-2 group-hover:scale-110 transition-transform">300+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Mariages</div>
                 </div>
                 <div class="text-center group cursor-default">
-                    <div class="text-3xl md:text-4xl font-black text-blue-500 mb-2 group-hover:scale-110 transition-transform">4+</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Clients satisfaits</div>
+                    <div class="text-3xl md:text-4xl font-black text-blue-500 mb-2 group-hover:scale-110 transition-transform">20K+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Messages</div>
                 </div>
                 <div class="text-center group cursor-default">
-                    <div class="text-3xl md:text-4xl font-black text-purple-500 mb-2 group-hover:scale-110 transition-transform">100%</div>
-                    <div class="text-xs text-gray-500 uppercase tracking-wider">Dispo</div>
+                    <div class="text-3xl md:text-4xl font-black text-secondary mb-2 group-hover:scale-110 transition-transform">100%</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Vérifié</div>
                 </div>
             </div>
         </div>
 
-        <!-- Scroll indicator animé -->
+        <!-- Scroll indicator -->
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 transition-opacity" 
              :class="y > 100 && 'opacity-0 pointer-events-none'">
             <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
@@ -118,316 +99,75 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION SERVICES - Design minimaliste pro -->
+    <!-- SECTION COMMENT ÇA MARCHE -->
     <!-- ============================================ -->
-    <section id="services" class="py-20 md:py-32 bg-base-100 transition-colors duration-500 relative overflow-hidden">
-        
-        <!-- Background pattern subtil -->
-        <div class="absolute inset-0 opacity-[0.02] pointer-events-none">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.1),transparent_50%)]"></div>
-        </div>
-
-        <div class="container mx-auto px-4 relative z-10">
-            
-            <!-- Header de section -->
-            <div class="max-w-3xl mb-20">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="text-primary font-mono text-sm font-bold">01</span>
-                    <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
-                    <span class="text-primary/50 font-mono text-xs uppercase tracking-[0.3em]">Expertise</span>
-                </div>
-                <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-base-content tracking-tight leading-[0.95] mb-6">
-                    Architecte du <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_auto]">Digital</span>
-                </h2>
-                <p class="text-lg text-base-content/60 leading-relaxed max-w-2xl">
-                    Une approche holistique combinant développement, infrastructure et sécurité pour des solutions pérennes.
-                </p>
-                <p class="text-lg text-base-content/60 leading-relaxed max-w-2xl">
-                    Ce site est hébergé automatiquement via un pipeline CI/CD utilisant Docker et GitHub Actions sur Render.
-                </p>
-            </div>
-
-            <!-- Grille de services moderne -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto mb-16">
-                
-                <!-- Service 1 - Développement -->
-                <div class="group relative p-8 md:p-12 border border-base-300 hover:border-primary/50 transition-all duration-500 bg-base-100 hover:bg-primary/[0.02] overflow-hidden">
-                    <!-- Effet de coin -->
-                    <div class="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-primary/0 group-hover:border-primary/30 transition-all duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-primary/0 group-hover:border-primary/30 transition-all duration-500"></div>
-                    
-                    <!-- Numéro -->
-                    <span class="absolute top-4 right-4 text-7xl font-black text-base-content/5 group-hover:text-primary/10 transition-colors">01</span>
-                    
-                    <div class="relative z-10">
-                        <span class="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-6">/CODE_DEVELOPMENT</span>
-                        
-                        <h3 class="text-3xl font-black text-base-content mb-4 group-hover:text-primary transition-colors">
-                            Développement Full-Stack
-                        </h3>
-                        
-                        <p class="text-base-content/60 leading-relaxed mb-8">
-                            Création d'applications web scalables et performantes avec des architectures modernes. De l'API backend aux interfaces utilisateur réactives.
-                        </p>
-                        
-                        <!-- Tags technos -->
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-default">Python/Django</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-default">React/Next.js</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-default">PostgreSQL</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-default">TailwindCSS</span>
-                        </div>
-                        
-                        <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:gap-4 transition-all group/link">
-                            En savoir plus
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Service 2 - ML & IA -->
-                <div class="group relative p-8 md:p-12 border border-base-300 hover:border-emerald-500/50 transition-all duration-500 bg-base-100 hover:bg-emerald-500/[0.02] overflow-hidden">
-                    <div class="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-emerald-500/0 group-hover:border-emerald-500/30 transition-all duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-emerald-500/0 group-hover:border-emerald-500/30 transition-all duration-500"></div>
-                    
-                    <span class="absolute top-4 right-4 text-7xl font-black text-base-content/5 group-hover:text-emerald-500/10 transition-colors">02</span>
-                    
-                    <div class="relative z-10">
-                        <span class="inline-block px-3 py-1 bg-emerald-500/10 text-emerald-600 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-6">/INTELLIGENCE_IA</span>
-                        
-                        <h3 class="text-3xl font-black text-base-content mb-4 group-hover:text-emerald-500 transition-colors">
-                            Machine Learning & IA
-                        </h3>
-                        
-                        <p class="text-base-content/60 leading-relaxed mb-8">
-                            Intégration d'intelligence artificielle et modèles prédictifs pour automatiser vos processus métier et optimiser vos décisions.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-colors cursor-default">Scikit-Learn</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-colors cursor-default">HuggingFace</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-colors cursor-default">TensorFlow</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-colors cursor-default">PyTorch</span>
-                        </div>
-                        
-                        <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:gap-4 transition-all">
-                            En savoir plus
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Service 3 - DevOps -->
-                <div class="group relative p-8 md:p-12 border border-base-300 hover:border-blue-500/50 transition-all duration-500 bg-base-100 hover:bg-blue-500/[0.02] overflow-hidden">
-                    <div class="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-blue-500/0 group-hover:border-blue-500/30 transition-all duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-blue-500/0 group-hover:border-blue-500/30 transition-all duration-500"></div>
-                    
-                    <span class="absolute top-4 right-4 text-7xl font-black text-base-content/5 group-hover:text-blue-500/10 transition-colors">03</span>
-                    
-                    <div class="relative z-10">
-                        <span class="inline-block px-3 py-1 bg-blue-500/10 text-blue-600 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-6">/OPERATIONS_CLOUD</span>
-                        
-                        <h3 class="text-3xl font-black text-base-content mb-4 group-hover:text-blue-500 transition-colors">
-                            DevOps & Cloud
-                        </h3>
-                        
-                        <p class="text-base-content/60 leading-relaxed mb-8">
-                            Automatisation CI/CD, containerisation et gestion d'infrastructures cloud pour des déploiements fiables et scalables.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-blue-500/50 hover:bg-blue-500/5 transition-colors cursor-default">Docker/K8s</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-blue-500/50 hover:bg-blue-500/5 transition-colors cursor-default">GitHub Actions</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-blue-500/50 hover:bg-blue-500/5 transition-colors cursor-default">AWS/Azure</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-blue-500/50 hover:bg-blue-500/5 transition-colors cursor-default">Terraform</span>
-                        </div>
-                        
-                        <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:gap-4 transition-all">
-                            En savoir plus
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Service 4 - Sécurité -->
-                <div class="group relative p-8 md:p-12 border border-base-300 hover:border-red-500/50 transition-all duration-500 bg-base-100 hover:bg-red-500/[0.02] overflow-hidden">
-                    <div class="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-red-500/0 group-hover:border-red-500/30 transition-all duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-red-500/0 group-hover:border-red-500/30 transition-all duration-500"></div>
-                    
-                    <span class="absolute top-4 right-4 text-7xl font-black text-base-content/5 group-hover:text-red-500/10 transition-colors">04</span>
-                    
-                    <div class="relative z-10">
-                        <span class="inline-block px-3 py-1 bg-red-500/10 text-red-600 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-6">/CYBER_SECURITY</span>
-                        
-                        <h3 class="text-3xl font-black text-base-content mb-4 group-hover:text-red-500 transition-colors">
-                            Cybersécurité
-                        </h3>
-                        
-                        <p class="text-base-content/60 leading-relaxed mb-8">
-                            Pentesting, audits de vulnérabilités et sécurisation d'infrastructures pour protéger vos actifs numériques critiques.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-red-500/50 hover:bg-red-500/5 transition-colors cursor-default">OWASP Top 10</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-red-500/50 hover:bg-red-500/5 transition-colors cursor-default">Burp Suite</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-red-500/50 hover:bg-red-500/5 transition-colors cursor-default">Metasploit</span>
-                            <span class="px-3 py-1.5 rounded-lg bg-base-200 border border-base-300 font-mono text-xs font-bold hover:border-red-500/50 hover:bg-red-500/5 transition-colors cursor-default">Nmap/Nessus</span>
-                        </div>
-                        
-                        <a href="#" class="inline-flex items-center gap-2 text-sm font-bold text-red-600 hover:gap-4 transition-all">
-                            En savoir plus
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- CTA Section -->
-            <div class="text-center">
-                <a href="{% url 'core:service' %}" class="group inline-flex items-center gap-3 btn btn-lg bg-base-200 hover:bg-primary hover:text-white border border-base-300 hover:border-primary rounded-full px-10 transition-all">
-                    <span class="font-bold uppercase tracking-widest text-xs">Explorer tous les services</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- SECTION PORTFOLIO - Cards premium -->
-    <!-- ============================================ -->
-    <section id="portfolio" class="py-20 md:py-32 bg-base-200/30 relative overflow-hidden">
+    <section class="py-20 md:py-32 bg-base-100 transition-colors duration-500 relative overflow-hidden">
         
         <div class="container mx-auto px-4 relative z-10">
             
             <!-- Header -->
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 gap-8">
-                <div class="max-w-2xl">
-                    <div class="flex items-center gap-4 mb-6">
-                        <span class="text-primary font-mono text-sm font-bold">02</span>
-                        <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
-                        <span class="text-primary/50 font-mono text-xs uppercase tracking-[0.3em]">Réalisations</span>
-                    </div>
-                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-base-content tracking-tight leading-[0.95]">
-                        Projets <br>
-                        <span class="text-base-content/30">Sélectionnés</span>
-                    </h2>
-                </div>
-                
-                <a href="#" class="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
-                    Voir tout
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
+            <div class="max-w-3xl mb-20 text-center">
+                <h2 class="text-4xl md:text-6xl font-black text-base-content tracking-tight leading-[0.95] mb-6">
+                    Comment trouver <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">l'amour</span> ?
+                </h2>
+                <p class="text-lg text-base-content/60 leading-relaxed">
+                    Notre algorithme connecte les cœurs à travers les frontières.
+                </p>
             </div>
 
-            <!-- Grille de projets -->
-             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-    
-                    {% for project in featured_projects %}
-                    <article class="group cursor-pointer">
-                        <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-base-300 border border-base-300 mb-6">
-                            
-                            {% if project.featured_image %}
-                                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" 
-                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            {% else %}
-                                <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-base-300 to-base-300 flex items-center justify-center">
-                                    <span class="text-base-300 font-black text-5xl opacity-20 uppercase italic">{{ project.title|truncatechars:10 }}</span>
-                                </div>
-                            {% endif %}
-                            
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary to-purple-600 opacity-0 group-hover:opacity-95 transition-all duration-500 flex flex-col justify-center items-center p-8 text-center">
-                                <h4 class="text-white text-2xl font-bold mb-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{{ project.title }}</h4>
-                                <p class="text-white/90 text-sm mb-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-                                    {{ project.description|truncatewords:20 }}
-                                </p>
-                                <a href="{{ project.get_absolute_url }}" class="inline-flex items-center gap-2 px-6 py-2 border-2 border-white text-white rounded-full text-sm font-bold hover:bg-white hover:text-primary transition-colors transform translate-y-4 group-hover:translate-y-0 duration-500 delay-150">
-                                    Voir le cas d'étude
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </a>
-                            </div>
-
-                            <div class="absolute top-4 right-4 bg-base-100/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                                <span class="font-mono text-xs font-bold text-primary">{{ project.year }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <h3 class="text-2xl font-bold text-base-content group-hover:text-primary transition-colors">
-                                <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
-                            </h3>
-                            <p class="text-sm text-base-content/60 leading-relaxed line-clamp-2">
-                                {{ project.subtitle }}
-                            </p>
-                            
-                            <div class="flex flex-wrap gap-2 pt-2">
-                                {% for tech in project.technologies.all|slice:":3" %}
-                                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-mono font-bold uppercase">#{{ tech.name }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </article>
-                    {% empty %}
-                    <div class="col-span-3 text-center py-20 opacity-50">
-                        <p class="italic">Aucun projet mis en avant pour le moment.</p>
-                    </div>
-                    {% endfor %}
-
+            <!-- Grille Étapes -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                
+                <!-- Étape 1 -->
+                <div class="group relative p-8 border border-base-300 hover:border-primary/50 transition-all duration-500 bg-base-100 hover:bg-primary/[0.02] text-center">
+                    <div class="w-20 h-20 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary text-3xl mb-6 group-hover:scale-110 transition-transform">1</div>
+                    <h3 class="text-2xl font-black text-base-content mb-4">Inscription Rapide</h3>
+                    <p class="text-base-content/60">
+                        Créez votre profil en moins de 2 minutes. Email, Google ou Facebook.
+                    </p>
                 </div>
 
-            <!-- CTA -->
-            <div class="text-center mt-16">
-                <a href="#" class="group inline-flex items-center gap-3 btn btn-lg bg-base-100 hover:bg-primary hover:text-white border border-base-300 hover:border-primary rounded-full px-10 transition-all">
-                    <span class="font-bold uppercase tracking-widest text-xs">Portfolio complet</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                </a>
+                <!-- Étape 2 -->
+                <div class="group relative p-8 border border-base-300 hover:border-secondary/50 transition-all duration-500 bg-base-100 hover:bg-secondary/[0.02] text-center">
+                    <div class="w-20 h-20 mx-auto bg-secondary/10 rounded-full flex items-center justify-center text-secondary text-3xl mb-6 group-hover:scale-110 transition-transform">2</div>
+                    <h3 class="text-2xl font-black text-base-content mb-4">Découvrez</h3>
+                    <p class="text-base-content/60">
+                        Parcourez les profils au Bénin, en France, au USA et ailleurs.
+                    </p>
+                </div>
+
+                <!-- Étape 3 -->
+                <div class="group relative p-8 border border-base-300 hover:border-pink-500/50 transition-all duration-500 bg-base-100 hover:bg-pink-500/[0.02] text-center">
+                    <div class="w-20 h-20 mx-auto bg-pink-500/10 rounded-full flex items-center justify-center text-pink-500 text-3xl mb-6 group-hover:scale-110 transition-transform">3</div>
+                    <h3 class="text-2xl font-black text-base-content mb-4">Match & Chat</h3>
+                    <p class="text-base-content/60">
+                        Likéz et discutez pour voir si la compatibilité est au rendez-vous.
+                    </p>
+                </div>
+
             </div>
         </div>
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION BLOG - Design éditorial -->
+    <!-- SECTION BLOG (SEO) - Récupérée du Portfolio -->
     <!-- ============================================ -->
-    <section id="blog" class="py-20 md:py-32 bg-base-100 relative">
+    <section id="blog" class="py-20 md:py-32 bg-base-200/30 relative">
         <div class="container mx-auto px-4">
             
             <!-- Header -->
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 gap-8">
                 <div class="max-w-2xl">
                     <div class="flex items-center gap-4 mb-6">
-                        <span class="text-primary font-mono text-sm font-bold">03</span>
+                        <span class="text-primary font-mono text-sm font-bold">ACTU</span>
                         <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
-                        <span class="text-primary/50 font-mono text-xs uppercase tracking-[0.3em]">Insights</span>
                     </div>
-                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-base-content tracking-tight leading-[0.95]">
-                        Journal <br>
-                        <span class="text-base-content/30">Technique</span>
+                    <h2 class="text-4xl md:text-6xl font-black text-base-content tracking-tight leading-[0.95]">
+                        Conseils <br>
+                        <span class="text-base-content/30">Amour & Séduction</span>
                     </h2>
                 </div>
-                
-                <a href="#" class="group flex items-center gap-3 text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">
-                    Tout le blog
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                </a>
             </div>
 
             <!-- Grille d'articles -->
@@ -444,42 +184,19 @@
                                 <span class="font-black text-3xl text-base-content/10 italic">{{ post.title|truncatechars:20 }}</span>
                             </div>
                         {% endif %}
-                        
-                        <!-- Date badge -->
-                        <div class="absolute top-4 left-4 bg-base-100/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg border border-base-300">
-                            <span class="block text-2xl font-black text-primary leading-none">{{ post.published_at|date:"d" }}</span>
-                            <span class="block text-[10px] uppercase opacity-50 font-bold tracking-wider">{{ post.published_at|date:"M" }}</span>
-                        </div>
-
-                        <!-- Overlay gradient -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </a>
                     
                     <!-- Contenu -->
-                    <div class="space-y-4">
-                        <!-- Meta -->
-                        <div class="flex items-center gap-3 text-[10px] font-mono uppercase tracking-widest">
-                            <span class="px-3 py-1 bg-primary/10 text-primary rounded-full font-bold">
-                                #{{ post.categories.first.name|default:"Tech" }}
-                            </span>
-                            <span class="text-base-content/50">{{ post.reading_time }} min</span>
-                        </div>
-
-                        <!-- Titre -->
+                    <div class="space-y-3">
                         <h3 class="text-2xl font-bold text-base-content group-hover:text-primary transition-colors leading-tight">
                             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
                         </h3>
-
-                        <!-- Description -->
-                        <p class="text-sm text-base-content/60 leading-relaxed line-clamp-3">
-                            {{ post.seo_description|default:post.content|striptags|truncatewords:25 }}
+                        <p class="text-sm text-base-content/60 leading-relaxed line-clamp-2">
+                            {{ post.seo_description|default:post.content|striptags|truncatewords:15 }}
                         </p>
-
-                        <!-- Lire plus -->
-                        <a href="{{ post.get_absolute_url }}" 
-                           class="inline-flex items-center gap-2 text-sm font-bold group-hover:gap-4 transition-all pt-2">
-                            <span>Lire l'article</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <a href="{{ post.get_absolute_url }}" class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:gap-4 transition-all pt-2">
+                            Lire l'article
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
                         </a>
@@ -487,12 +204,7 @@
                 </article>
                 {% empty %}
                 <div class="col-span-3 text-center py-20">
-                    <div class="inline-block p-8 bg-base-200 rounded-2xl border border-base-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-base-content/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        <p class="text-base-content/50 italic">Premiers articles en cours de rédaction...</p>
-                    </div>
+                    <p class="text-base-content/50 italic">Aucun article publié pour le moment.</p>
                 </div>
                 {% endfor %}
             </div>
@@ -500,7 +212,7 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION CTA FINAL - Conversion -->
+    <!-- SECTION CTA FINAL - Rejoignez-nous -->
     <!-- ============================================ -->
     <section class="py-20 md:py-32 bg-gradient-to-br from-primary via-purple-600 to-primary relative overflow-hidden">
         <!-- Pattern background -->
@@ -511,40 +223,21 @@
         <div class="container mx-auto px-4 relative z-10 text-center">
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
-                    Prêt à transformer <br>
-                    votre vision en réalité ?
+                    Prêt à trouver <br>
+                    votre âme sœur ?
                 </h2>
                 <p class="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-                    Discutons de votre projet et explorons ensemble les solutions les plus adaptées à vos besoins.
+                    Rejoignez des milliers de célibataires sérieux dès maintenant. L'inscription est 100% gratuite.
                 </p>
                 
                 <div class="flex flex-wrap justify-center gap-4">
-                    <a href="#contact" class="btn btn-lg bg-white text-primary hover:bg-white/90 border-none rounded-full px-12 font-bold uppercase tracking-wider hover:scale-105 transition-all shadow-2xl">
-                        Démarrer un projet
+                    <a href="{% url 'users:register' %}" 
+                       class="btn btn-lg bg-white text-primary hover:bg-white/90 border-none rounded-full px-12 font-bold uppercase tracking-wider hover:scale-105 transition-all shadow-2xl">
+                        Créer mon compte
                     </a>
-                    <a href="{% url 'core:about' %}" class="btn btn-lg btn-outline border-2 border-white text-white hover:bg-white hover:text-primary rounded-full px-12 font-bold uppercase tracking-wider transition-all">
+                    <a href="#" class="btn btn-lg btn-outline border-2 border-white text-white hover:bg-white hover:text-primary rounded-full px-12 font-bold uppercase tracking-wider transition-all">
                         En savoir plus
                     </a>
-                </div>
-
-                <!-- Stats complémentaires -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 pt-12 border-t border-white/20">
-                    <div class="text-center">
-                        <div class="text-4xl font-black text-white mb-2">24h</div>
-                        <div class="text-sm text-white/70 uppercase tracking-wider">Réponse garantie</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-4xl font-black text-white mb-2">100%</div>
-                        <div class="text-sm text-white/70 uppercase tracking-wider">Satisfaction client</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-4xl font-black text-white mb-2">8+</div>
-                        <div class="text-sm text-white/70 uppercase tracking-wider">Projets réussis</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-4xl font-black text-white mb-2">4+</div>
-                        <div class="text-sm text-white/70 uppercase tracking-wider">Ans d'expérience</div>
-                    </div>
                 </div>
             </div>
         </div>
