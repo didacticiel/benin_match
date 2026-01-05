@@ -1,0 +1,43 @@
+# .github/workflows/deploy.yml
+# LOGIQUE CI/CD : Ce fichier définit un pipeline en deux temps.
+# 1. CI (Intégration Continue) : On teste si le code est sain.
+# 2. CD (Déploiement Continu) : On envoie le code validé vers Render.
+
+name: Pipeline de Déploiement Automatique
+
+on:
+  push:
+    branches: [ "main" ] # Déclenche la logique à chaque "git push" vers main
+
+jobs:
+  # --- PARTIE CI (Test) ---
+  integration_continue:
+    runs-on: ubuntu-latest
+    env:
+      # On dit à Django d'utiliser les réglages de test (SQLite en mémoire)
+      DJANGO_SETTINGS_MODULE: "src.settings.testing"
+      SECRET_KEY: "cle-temporaire-pour-github-actions"
+    
+    steps:
+      - uses: actions/checkout@v4 # Étape 1 : GitHub télécharge ton code
+      # Nouvelle étape : Vérifier que l'image Docker se construit sans erreur
+      - name: Vérifier le Build Docker
+        run: docker build . -t abdoul-test:latest
+      - uses: actions/setup-python@v5 # Étape 2 : GitHub installe Python 3.13
+        with:
+          python-version: '3.13'
+          
+      - name: Installer les outils
+        run: pip install -r requirements.txt # Étape 3 : Installation de ton environnement
+
+      - name: Lancer les tests
+        run: python manage.py test # Étape 4 : Vérification du code (CI)
+
+  # --- PARTIE CD (Déploiement) ---
+  deploiement_continu:
+    needs: integration_continue # LOGIQUE : Ne pas déployer si les tests échouent !
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prévenir Render
+        # On envoie un signal (Webhook) à Render pour lancer la mise à jour
+        run: curl -f ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

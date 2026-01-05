@@ -4,6 +4,11 @@ import os
 import sys
 
 
+#  (Détecte si on est en local ou en prod)
+# Si la variable d'environnement DJANGO_SETTINGS_MODULE n'est pas définie, on force local
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local') 
+# Note: En production (PA), cette variable sera déjà définie dans la config Web de PythonAnywhere.
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
