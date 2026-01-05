@@ -1,0 +1,34 @@
+{
+  "name": "benin_match",
+  "version": "1.0.0",
+  "description": "Site de rencontre Béninois & Diaspora - Django, Tailwind v4, DaisyUI",
+  "scripts": {
+    "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch",
+    "build": "tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --minify"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "daisyui": "^5.5.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/didacticiel/benin_match.git"
+  },
+  "keywords": [
+    "django",
+    "tailwind",
+    "daisyui",
+    "dating",
+    "benin",
+    "diaspora",
+    "violet",
+    "orange"
+  ],
+  "author": "Abdoul",
+  "license": "ISC"
+}
