@@ -1,9 +1,15 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView  # AJOUTER ICI
 from django.urls import reverse_lazy
 from .models import Profile
-from .forms import ProfileForm
+from .forms import ProfileForm, ProfileImageForm
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import date, timedelta
+from .models import Profile, ProfileImage
+
 
 # --- 1. LISTE DES PROFILS (PUBLIQUE) ---
 class ProfileListView(ListView):
@@ -26,22 +32,96 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Récupérer toutes les images du profil
+        
+        # 1. Récupérer toutes les images du profil
         context['profile_images'] = self.object.images.all()
+        
+        # 2. Récupérer spécifiquement l'image marquée comme couverture
+        try:
+            # On cherche l'image où is_cover=True
+            context['cover_image'] = self.object.images.get(is_cover=True)
+        except ProfileImage.DoesNotExist:
+            # S'il n'y a pas d'image de couverture, on met None
+            context['cover_image'] = None
+            
         return context
 
 # --- 3. ÉDITION DU PROFIL (CONNECTÉ SEULEMENT) ---
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = Profile
-    form_class = ProfileForm
     template_name = "profiles/profile_edit.html"
-    success_url = reverse_lazy('profiles:my_profile') 
+    success_url = reverse_lazy('profiles:dashboard') # Redirection vers le dashboard
+    form_class = ProfileForm
 
     def get_object(self):
-        # S'assurer que l'utilisateur ne peut éditer que son propre profil
-        return self.request.user.profile
-    
-# Ajoute dans apps/profiles/views.py
+        """Récupère le profil ou le crée si inexistant"""
+        try:
+            return self.request.user.profile
+        except:
+            # Création avec valeurs par défaut pour éviter les erreurs IntegrityError
+            from datetime import date, timedelta
+            default_dob = date.today() - timedelta(days=18*365)
+            profile = Profile.objects.create(
+                user=self.request.user,
+                date_of_birth=default_dob,
+                gender='M',
+                city='Cotonou'
+            )
+            return profile
+
+    def get_context_data(self, **kwargs):
+        """Envoie les deux formulaires (Profil et Image) au template"""
+        context = super().get_context_data(**kwargs)
+        
+        # Initialiser le formulaire d'image avec None (vide)
+        # (Si on passe request.FILES ici, Django va essayer de valider le formulaire sur le GET, ce qui est bizarre)
+        context['image_form'] = ProfileImageForm() 
+        
+        # Récupérer l'image de couverture actuelle
+        try:
+            context['current_cover'] = self.object.images.get(is_cover=True)
+        except ProfileImage.DoesNotExist:
+            context['current_cover'] = None
+            
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        Gère le POST avec deux formulaires séparés.
+        """
+        self.object = self.get_object()
+        
+        # 1. Instancier les deux formulaires avec les données POST
+        form = ProfileForm(request.POST, instance=self.object)
+        image_form = ProfileImageForm(request.POST, request.FILES)
+        
+        # Variables de succès
+        profile_saved = False
+        image_saved = False
+
+        # 2. Validation et Sauvegarde
+        if form.is_valid():
+            form.save() # Sauvegarde le profil + nom/prénom
+            profile_saved = True
+        else:
+            # Si le formulaire principal est invalide, on arrête tout.
+            # On retourne la page avec les erreurs (les inputs files seront vides -> comportement normal)
+            return self.form_invalid(form)
+
+        # 3. Validation et Sauvegarde de l'Image (Indépendante)
+        if image_form.is_valid():
+            image_form.save(self.object)
+            image_saved = True
+        # Note : Si image_form n'est pas valide (ex: fichier corrompu), on ne fait rien, mais on ne bloque pas la sauvegarde du profil principal
+
+        # 4. Redirection
+        if profile_saved:
+            return HttpResponseRedirect(self.get_success_url())
+        elif image_saved:
+            # Si seule l'image a été sauvegardée, on recharge la page pour l'afficher
+            return HttpResponseRedirect(request.path_info)
+        else:
+            # Ne devrait pas arriver
+            return self.form_invalid(form)
 
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin

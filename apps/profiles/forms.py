@@ -1,10 +1,37 @@
 from django import forms
-from .models import Profile
+from .models import Profile, ProfileImage
 
 class ProfileForm(forms.ModelForm):
+    """
+    Formulaire principal.
+    Gère : Nom, Prénom (User) + Infos Profil (Profile) + AVATAR (User).
+    """
+    
+    # --- CHAMPS HORS MODÈLE (User) ---
+    first_name = forms.CharField(
+        label="Prénom",
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input input-bordered', 'placeholder': 'Votre prénom'})
+    )
+    last_name = forms.CharField(
+        label="Nom",
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'input input-bordered', 'placeholder': 'Votre nom'})
+    )
+    
+    # --- CHAMP MANUEL (Avatar User) ---
+    # On l'ajoute manuellement pour gérer l'upload vers le User, pas le Profile
+    avatar = forms.ImageField(
+        label="Ma photo (Avatar)",
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'file-input file-input-bordered w-full'}),
+        help_text="C'est votre photo principale (rondes). Max 2MB."
+    )
+
     class Meta:
         model = Profile
-        fields = ['gender', 'date_of_birth', 'city', 'country', 'is_diaspora', 'relationship_goal', 'bio']
+        # On ne met PAS 'avatar' ici, car il n'est pas dans le modèle Profile
+        fields = ['gender', 'date_of_birth', 'city', 'country', 'is_diaspora', 'relationship_goal', 'bio'] 
         
         widgets = {
             'gender': forms.Select(attrs={'class': 'select select-bordered'}),
@@ -15,3 +42,57 @@ class ProfileForm(forms.ModelForm):
             'relationship_goal': forms.Select(attrs={'class': 'select select-bordered'}),
             'is_diaspora': forms.CheckboxInput(attrs={'class': 'checkbox checkbox-primary'}),
         }
+
+    def save(self, commit=True):
+        """
+        Sauvegarde le Profil ET met à jour l'Avatar de l'User.
+        """
+        profile = super().save(commit=False)
+
+        # 1. Mise à jour Nom/Prénom
+        profile.user.first_name = self.cleaned_data['first_name']
+        profile.user.last_name = self.cleaned_data['last_name']
+
+        # 2. Mise à jour de l'AVATAR (C'est ici que ça bloquait souvent)
+        # On regarde si un fichier a été envoyé dans self.FILES
+        if 'avatar' in self.FILES:
+            profile.user.avatar = self.FILES['avatar']
+
+        # 3. Sauvegarder l'User d'abord (pour que l'image soit enregistrée)
+        profile.user.save()
+
+        # 4. Sauvegarder le Profil
+        if commit:
+            profile.save()
+        return profile
+    
+# apps/profiles/forms.py
+
+class ProfileImageForm(forms.Form):
+    image = forms.ImageField(
+        label="Image de couverture",
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'file-input file-input-bordered w-full',
+            'accept': 'image/*'
+        })
+    )
+
+    def save(self, profile):
+        """
+        Sauvegarde SEULEMENT si un fichier est fourni.
+        """
+        image_file = self.cleaned_data.get('image')
+        
+      
+        if image_file:  # On crée uniquement s'il y a une image
+            # Supprimer l'ancienne couverture
+            profile.images.filter(is_cover=True).delete()
+            
+            # Créer la nouvelle
+            ProfileImage.objects.create(
+                profile=profile,
+                image=image_file,
+                is_cover=True
+            )
+        # Si pas de fichier, on ne fait rien (on ne met pas à jour la BDD)
