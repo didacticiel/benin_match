@@ -75,3 +75,35 @@ class ProfileImage(models.Model):
         ordering = ['-is_cover', '-created_at']
         verbose_name = "Photo de profil"
         verbose_name_plural = "Photos de profil"
+        
+class ProfileView(models.Model):
+    '''Tracker les visites de profil'''
+    viewer = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='profile_views'
+    )
+    viewed_profile = models.ForeignKey(
+        Profile, 
+        on_delete=models.CASCADE, 
+        related_name='views'
+    )
+    viewed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-viewed_at']
+        indexes = [
+            models.Index(fields=['viewed_profile', '-viewed_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.viewer.email} a vu {self.viewed_profile.user.email}"
+    
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes_given")
+    liked_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes_received")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'liked_user') # Un utilisateur ne peut liker qu'une fois un autre

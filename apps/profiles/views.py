@@ -4,11 +4,14 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, TemplateView
 from django.urls import reverse_lazy
-from .models import Profile, ProfileImage
+from .models import Profile, ProfileImage, ProfileView
 from .forms import ProfileForm, ProfileImageForm
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, timedelta
+from django.db.models import Count, Q, Max
+from django.utils import timezone
+
 
 
 # --- 1. LISTE DES PROFILS (PUBLIQUE) ---
@@ -127,40 +130,235 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # --- 4. DASHBOARD ---
+
 class DashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Dashboard dynamique avec vraies données :
+    - Stats réelles (visites, likes, messages)
+    - Complétude du profil calculée
+    - Activité récente
+    - Suggestions de profils
+    """
     template_name = "profiles/dashboard.html"
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         
-        # 1. Récupérer le profil de l'utilisateur
+        # ===================================
+        # 1. RÉCUPÉRER LE PROFIL
+        # ===================================
         try:
             profile = user.profile
-        except AttributeError:
-            profile = None
-
-        # 2. Calculer la "Complétude" du profil (pourcentage)
-        completion = 0
-        if profile:
-            if profile.gender: completion += 20
-            if profile.city: completion += 20
-            if profile.bio: completion += 20
-            if profile.relationship_goal: completion += 20
-            if profile.images.count() > 0: completion += 20
+        except Profile.DoesNotExist:
+            # Si pas de profil, créer un profil minimal
+            from datetime import date
+            profile = Profile.objects.create(
+                user=user,
+                gender='M',
+                city='Cotonou',
+                country='Bénin',
+                date_of_birth=date.today() - timedelta(days=18*365)
+            )
         
-        # 3. Faux "Stats"
-        stats = {
-            'visits': '12',
-            'new_likes': '5',
-            'new_messages': '2'
+        # ===================================
+        # 2. CALCULER LA COMPLÉTUDE DU PROFIL
+        # ===================================
+        completion_steps = {
+            'Informations de base': profile.gender and profile.date_of_birth and profile.city,
+            'Photo de profil': profile.images.exists(),
+            'Biographie': bool(profile.bio and len(profile.bio) > 20),
+            'Objectif relationnel': bool(profile.relationship_goal),
+            'Photo de couverture': profile.images.filter(is_cover=True).exists(),
         }
+        
+        completed_steps = sum(1 for completed in completion_steps.values() if completed)
+        total_steps = len(completion_steps)
+        completion = int((completed_steps / total_steps) * 100)
+        
+        # ===================================
+        # 3. STATS RÉELLES
+        # ===================================
+        
+        # A. Visites de profil (depuis ProfileView)
+        try:
+            # Visites cette semaine
+            visits_count = ProfileView.objects.filter(
+                viewed_profile=profile,
+                viewed_at__gte=timezone.now() - timedelta(days=7)
+            ).count()
+        except:
+            visits_count = 0
+        
+        # B. Messages non lus (depuis le modèle Message)
+        try:
+            from apps.messaging.models import Message, Thread
+            
+            unread_messages = Message.objects.filter(
+                thread__participants=user,
+                is_read=False
+            ).exclude(sender=user).count()
+            
+            # Total de conversations actives
+            active_conversations = Thread.objects.filter(
+                participants=user,
+                is_active=True
+            ).count()
+        except:
+            unread_messages = 0
+            active_conversations = 0
+        
+        # C. Statistiques basées sur les profils
+        # Nombre de vues uniques (visiteurs différents)
+        try:
+            unique_visitors = ProfileView.objects.filter(
+                viewed_profile=profile,
+                viewed_at__gte=timezone.now() - timedelta(days=7)
+            ).values('viewer').distinct().count()
+        except:
+            unique_visitors = 0
+        
+        stats = {
+            'visits': visits_count,
+            'unique_visitors': unique_visitors,
+            'new_messages': unread_messages,
+            'conversations': active_conversations,
+        }
+        
+        # ===================================
+        # 4. ACTIVITÉ RÉCENTE
+        # ===================================
+        recent_activities = []
+        
+        # A. Derniers likes reçus
+        try:
+            from apps.profiles.models import Like
+            recent_likes = Like.objects.filter(
+                liked_user=user
+            ).select_related('user', 'user__profile').order_by('-created_at')[:5]
+            
+            for like in recent_likes:
+                recent_activities.append({
+                    'type': 'like',
+                    'user': like.user,
+                    'profile': like.user.profile if hasattr(like.user, 'profile') else None,
+                    'timestamp': like.created_at,
+                    'icon': 'heart',
+                })
+        except:
+            pass
+        
+        # B. Derniers messages reçus
+        try:
+            from apps.messaging.models import Message
+            recent_messages = Message.objects.filter(
+                thread__participants=user
+            ).exclude(
+                sender=user
+            ).select_related('sender', 'sender__profile', 'thread').order_by('-created_at')[:5]
+            
+            for message in recent_messages:
+                recent_activities.append({
+                    'type': 'message',
+                    'user': message.sender,
+                    'profile': message.sender.profile if hasattr(message.sender, 'profile') else None,
+                    'timestamp': message.created_at,
+                    'content': message.content[:50] if message.content else "Photo",
+                    'thread_id': message.thread.id,
+                    'icon': 'chat',
+                })
+        except:
+            pass
+        
+        # Trier par date (plus récent en premier)
+        recent_activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        recent_activities = recent_activities[:10]  # Garder les 10 plus récents
+        
+        # ===================================
+        # 5. SUGGESTIONS DE PROFILS COMPATIBLES
+        # ===================================
+        suggested_profiles = []
+        
+        if profile:
+            # Trouver des profils compatibles
+            # Critères : même ville ou même pays, genre opposé (pour hétéro)
+            suggested_profiles = Profile.objects.filter(
+                is_active=True,
+            ).exclude(
+                user=user  # Pas moi-même
+            ).select_related('user').prefetch_related('images')
+            
+            # Filtrer par genre opposé (si hétéro)
+            if profile.gender == 'M':
+                suggested_profiles = suggested_profiles.filter(gender='F')
+            else:
+                suggested_profiles = suggested_profiles.filter(gender='M')
+            
+            # Priorité 1 : Même ville
+            same_city = suggested_profiles.filter(city=profile.city)[:3]
+            
+            # Priorité 2 : Même pays mais ville différente
+            same_country = suggested_profiles.filter(
+                country=profile.country
+            ).exclude(city=profile.city)[:3]
+            
+            # Priorité 3 : Diaspora (si je suis diaspora)
+            if profile.is_diaspora:
+                diaspora = suggested_profiles.filter(is_diaspora=True)[:3]
+                suggested_profiles = list(same_city) + list(diaspora) + list(same_country)
+            else:
+                suggested_profiles = list(same_city) + list(same_country)
+            
+            # Limiter à 6 suggestions
+            suggested_profiles = suggested_profiles[:6]
+        
+        # ===================================
+        # 6. POPULARITÉ DU PROFIL
+        # ===================================
+        # Score basé sur : photos, bio, likes reçus
+        # On définit d'abord total_likes en comptant les objets Like
+        try:
+            from apps.profiles.models import Like
+            total_likes = Like.objects.filter(liked_user=user).count()
+        except ImportError:
+            # Si le modèle Like n'est pas encore créé ou accessible
+            total_likes = 0
+        except Exception:
+            total_likes = 0
 
-        context['profile'] = profile
-        context['completion'] = completion
-        context['stats'] = stats
+        # Score basé sur : photos, bio, likes reçus
+        popularity_score = 0
+        if profile.images.count() > 0: popularity_score += 25
+        if profile.images.count() >= 3: popularity_score += 15
+        if profile.bio and len(profile.bio) > 50: popularity_score += 20
+        
+        # Maintenant total_likes est défini et peut être utilisé
+        if total_likes > 0: 
+            popularity_score += min(40, total_likes * 2)
+        
+        popularity_level = 'Débutant'
+        if popularity_score >= 80:
+            popularity_level = 'Star ⭐'
+        elif popularity_score >= 60:
+            popularity_level = 'Populaire 🔥'
+        elif popularity_score >= 40:
+            popularity_level = 'En hausse 📈'
+        
+        # ===================================
+        # 7. AJOUTER AU CONTEXTE
+        # ===================================
+        context.update({
+            'profile': profile,
+            'completion': completion,
+            'completion_steps': completion_steps,
+            'stats': stats,
+            'recent_activities': recent_activities,
+            'suggested_profiles': suggested_profiles,
+            'popularity_score': popularity_score,
+            'popularity_level': popularity_level,
+        })
+        
         return context
-
 
 #htmx----------------------------------------zone--------------------
 from django.http import HttpResponse
