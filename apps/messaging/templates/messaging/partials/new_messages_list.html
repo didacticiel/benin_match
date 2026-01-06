@@ -1,14 +1,8 @@
-<!-- ========================================= -->
-<!-- 2. apps/messaging/templates/messaging/partials/new_messages_list.html -->
-<!-- Template pour les NOUVEAUX messages reçus (polling) -->
-<!-- ========================================= -->
-
-<!-- Liste des messages reçus via polling -->
-<!-- Ces messages sont insérés automatiquement par JavaScript -->
+<!-- apps/messaging/partials/new_messages_list.html -->
 {% for message in messages %}
-<div class="chat chat-start"> <!-- 'start' car ce sont les messages de l'autre (à gauche) -->
+<div class="chat chat-{% if message.sender == user %}end{% else %}start{% endif %} message-fade-in" data-message-id="{{ message.id }}">
     
-    <!-- Avatar de l'expéditeur -->
+    <!-- Avatar -->
     <div class="chat-image avatar placeholder">
         <div class="w-8 h-8 rounded-full">
             {% if message.sender.avatar %}
@@ -16,20 +10,20 @@
                      class="w-full h-full rounded-full object-cover"
                      alt="{{ message.sender.get_full_name }}">
             {% else %}
-                <div class="w-full h-full rounded-full bg-secondary/20 flex items-center justify-center text-xs font-bold text-secondary">
+                <div class="w-full h-full rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
                     {{ message.sender.first_name.0 }}
                 </div>
             {% endif %}
         </div>
     </div>
 
-    <!-- Bulle de message (couleur secondaire pour messages reçus) -->
-    <div class="chat-bubble chat-bubble-secondary rounded-2xl shadow-lg">
+    <!-- Bulle de message -->
+    <div class="chat-bubble {% if message.sender == user %}chat-bubble-primary{% else %}chat-bubble-secondary{% endif %} rounded-2xl shadow-lg">
         {% if message.image %}
             <img src="{{ message.image.url }}" 
-                 class="mb-2 rounded-xl max-w-[200px] cursor-pointer hover:opacity-90 transition"
+                 class="message-image mb-2"
                  onclick="window.open(this.src, '_blank')"
-                 alt="Image reçue">
+                 alt="Image">
         {% endif %}
         {% if message.content %}
             <p class="text-base-content break-words">{{ message.content }}</p>
@@ -38,5 +32,22 @@
             {{ message.created_at|date:"H:i" }}
         </time>
     </div>
+
+    <!-- Statut de lecture -->
+    {% if message.sender == user %}
+        <div class="chat-footer opacity-50 text-[10px] flex items-center gap-1">
+            {% if message.is_read %}
+                <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                </svg>
+                Lu
+            {% else %}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Envoyé
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 {% endfor %}

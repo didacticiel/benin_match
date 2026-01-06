@@ -1,6 +1,6 @@
 <!-- ========================================= -->
 <!-- 4. apps/messaging/templates/messaging/chat.html -->
-<!-- Page principale de chat avec POLLING -->
+<!-- Page principale de chat avec POLLING - CORRIGÉ et NETTOYÉ -->
 <!-- ========================================= -->
 {% extends "core/base.html" %}
 {% load static %}
@@ -29,6 +29,55 @@
     #message-container {
         scroll-behavior: smooth;
     }
+    
+    /* Style pour l'aperçu de l'image sélectionnée */
+    .image-preview-container {
+        display: none;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .image-preview {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid var(--fallback-p, oklch(var(--p)));
+    }
+    
+    /* Taille réduite pour les images dans les messages */
+    .message-image {
+        max-width: 150px !important;
+        max-height: 150px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    
+    .message-image:hover {
+        opacity: 0.9;
+    }
+    
+    /* Style amélioré pour le textarea */
+    .message-textarea {
+        min-height: 44px;
+        max-height: 120px;
+        resize: none;
+        border-radius: 25px;
+        padding: 12px 20px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+    
+    .message-textarea:focus {
+        outline: none;
+        border-color: var(--fallback-p, oklch(var(--p)));
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
 </style>
 {% endblock %}
 
@@ -38,9 +87,7 @@
     <!-- Container principal du chat -->
     <div class="flex flex-col md:flex-row gap-6 h-[90vh] bg-base-100 rounded-3xl shadow-2xl border border-white/10 overflow-hidden">
         
-        <!-- ============================================ -->
         <!-- SIDEBAR GAUCHE - Profil de l'interlocuteur -->
-        <!-- ============================================ -->
         <div class="md:w-1/4 bg-base-200/30 border-r border-white/5 p-6 flex flex-col items-center">
             
             <!-- Avatar -->
@@ -74,9 +121,7 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
         <!-- ZONE CENTRALE - Messages et envoi -->
-        <!-- ============================================ -->
         <div class="md:w-3/4 flex flex-col bg-base-100 relative">
             
             <!-- Header du chat -->
@@ -98,15 +143,13 @@
                 </div>
             </div>
 
-            <!-- ============================================ -->
             <!-- ZONE DE MESSAGES (Scrollable) -->
-            <!-- ============================================ -->
             <div id="message-container" 
                  class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 scroll-smooth bg-gradient-to-b from-base-100 to-base-200/10">
                 
                 <!-- Messages chargés initialement -->
                 {% for message in messages %}
-                <div class="chat chat-{% if message.sender == user %}end{% else %}start{% endif %}">
+                <div class="chat chat-{% if message.sender == user %}end{% else %}start{% endif %} message-fade-in">
                     
                     <!-- Avatar -->
                     <div class="chat-image avatar placeholder">
@@ -127,7 +170,7 @@
                     <div class="chat-bubble {% if message.sender == user %}chat-bubble-primary{% else %}chat-bubble-secondary{% endif %} rounded-2xl shadow-lg">
                         {% if message.image %}
                             <img src="{{ message.image.url }}" 
-                                 class="mb-2 rounded-xl max-w-[200px] cursor-pointer hover:opacity-90 transition"
+                                 class="message-image mb-2"
                                  onclick="window.open(this.src, '_blank')"
                                  alt="Image">
                         {% endif %}
@@ -163,18 +206,33 @@
                 {% endfor %}
             </div>
 
-            <!-- ============================================ -->
             <!-- ZONE D'ENVOI (Footer) -->
-            <!-- ============================================ -->
             <div class="p-4 bg-base-200/10 border-t border-white/10 shrink-0">
                 
+                <!-- Aperçu de l'image -->
+                <div id="image-preview-container" class="image-preview-container hidden">
+                    <div class="flex items-center gap-3">
+                        <img id="image-preview" class="image-preview" src="" alt="Aperçu">
+                        <div class="flex flex-col">
+                            <span class="text-xs text-base-content/60">Photo à envoyer</span>
+                            <button type="button" 
+                                    onclick="removeImagePreview()" 
+                                    class="btn btn-xs btn-error mt-1">
+                                ✕ Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Formulaire avec HTMX -->
-                <form method="post" 
+                <form id="message-form" 
+                      method="post" 
                       enctype="multipart/form-data" 
                       hx-post="{% url 'messaging:detail' thread.id %}" 
-                      hx-swap="beforeend" 
+                      hx-swap="beforeend"
                       hx-target="#message-container" 
                       hx-indicator="#sending-indicator"
+                      hx-encoding="multipart/form-data"
                       class="space-y-2">
                     {% csrf_token %}
                     
@@ -186,27 +244,37 @@
                     <!-- Champ de saisie -->
                     <div class="flex gap-3 items-end">
                         
-                        <!-- Bouton image -->
-                        <button type="button" 
-                                onclick="document.getElementById('id_image').click()"
-                                class="btn btn-ghost btn-circle text-base-content/60 hover:text-primary">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 15.5M15 8h.01M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </button>
-
-                        <!-- Formulaire (caché par défaut) -->
-                        <div class="hidden">
-                            {{ form.image }}
+                        <!-- Bouton image avec input file -->
+                        <div class="relative">
+                            <label for="id_image" 
+                                   class="btn btn-ghost btn-circle text-base-content/60 hover:text-primary cursor-pointer flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 15.5M15 8h.01M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </label>
+                            
+                            <!-- Champ fichier -->
+                            <input type="file" 
+                                   id="id_image" 
+                                   name="image" 
+                                   accept="image/*"
+                                   class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                                   onchange="previewImage(this)">
                         </div>
 
-                        <!-- Textarea message -->
+                        <!-- Champ texte -->
                         <div class="flex-1">
-                            {{ form.content }}
+                            <textarea name="content" 
+                                      id="id_content"
+                                      class="message-textarea w-full"
+                                      placeholder="Écrivez votre message..."
+                                      rows="1"></textarea>
                         </div>
 
                         <!-- Bouton envoyer -->
-                        <button type="submit" class="btn btn-primary btn-circle">
+                        <button type="submit" 
+                                class="btn btn-primary btn-circle">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                             </svg>
@@ -214,132 +282,232 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- ============================================ -->
-<!-- JAVASCRIPT - POLLING (Simule le temps réel) -->
-<!-- ============================================ -->
+<!-- JAVASCRIPT CORRIGÉ -->
 <script>
-    /**
-     * SYSTÈME DE POLLING POUR MESSAGES EN TEMPS RÉEL
-     * 
-     * PRINCIPE :
-     * 1. Toutes les 3 secondes, on demande au serveur s'il y a de nouveaux messages
-     * 2. On envoie l'ID du dernier message qu'on a
-     * 3. Le serveur nous renvoie les messages plus récents (s'il y en a)
-     * 4. On les insère dans la page avec une animation
-     */
-    
-    // Variable globale : ID du dernier message reçu
-    let lastMessageId = {{ last_message_id }};
-    
-    // Conteneur des messages
+    // Variables globales
+    let lastMessageId = {{ last_message_id|default:0 }};
     const messageContainer = document.getElementById('message-container');
-    
+    const messageForm = document.getElementById('message-form');
+    let pollingInterval;
+    let isPolling = false;
+
     /**
-     * Fonction de polling : vérifie les nouveaux messages
+     * Affiche un aperçu de l'image sélectionnée
+     */
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const previewContainer = document.getElementById('image-preview-container');
+                const previewImg = document.getElementById('image-preview');
+                
+                previewImg.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+                
+                // Scroll doux vers la zone d'envoi
+                setTimeout(() => {
+                    previewContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }, 100);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    /**
+     * Supprime l'aperçu de l'image
+     */
+    function removeImagePreview() {
+        const input = document.getElementById('id_image');
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImg = document.getElementById('image-preview');
+        
+        if (input) {
+            input.value = '';
+        }
+        
+        if (previewImg) {
+            previewImg.src = '';
+        }
+        
+        if (previewContainer) {
+            previewContainer.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Validation du formulaire
+     */
+    function validateForm() {
+        const textarea = document.querySelector('textarea[name="content"]');
+        const fileInput = document.getElementById('id_image');
+        
+        const hasText = textarea && textarea.value.trim() !== '';
+        const hasImage = fileInput && fileInput.files.length > 0;
+        
+        if (!hasText && !hasImage) {
+            alert('Veuillez écrire un message ou sélectionner une photo');
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Scroll automatique vers le bas
+     */
+    function scrollToBottom() {
+        setTimeout(() => {
+            if (messageContainer) {
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+        }, 100);
+    }
+
+    /**
+     * Polling pour récupérer les nouveaux messages
      */
     function checkNewMessages() {
-        // Ne pas interroger si l'onglet n'est pas visible (économie de ressources)
-        if (document.hidden) return;
+        if (document.hidden || isPolling) return;
         
-        // Requête AJAX vers l'API de polling
+        isPolling = true;
+        
         fetch(`{% url 'messaging:poll' thread.id %}?last_id=${lastMessageId}`)
             .then(response => response.text())
             .then(html => {
-                // Si on a reçu du HTML (= nouveaux messages)
                 if (html.trim() !== "") {
-                    // Créer un élément temporaire pour parser le HTML
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = html;
-                    
-                    // Ajouter les nouveaux messages au conteneur
+                    // Ajouter les nouveaux messages
                     messageContainer.insertAdjacentHTML('beforeend', html);
                     
                     // Mettre à jour l'ID du dernier message
-                    const allMessages = messageContainer.querySelectorAll('.chat');
-                    if (allMessages.length > 0) {
-                        // On suppose que le dernier message a l'ID le plus élevé
-                        lastMessageId = parseInt(lastMessageId) + tempDiv.querySelectorAll('.chat').length;
+                    const newMessages = document.querySelectorAll('#message-container .chat');
+                    if (newMessages.length > 0) {
+                        const lastMessage = newMessages[newMessages.length - 1];
+                        const messageId = lastMessage.getAttribute('data-message-id');
+                        if (messageId) {
+                            lastMessageId = parseInt(messageId);
+                        }
                     }
                     
-                    // Scroll automatique vers le bas
                     scrollToBottom();
-                    
-                    // OPTIONNEL : Jouer un son de notification
-                    // playNotificationSound();
-                    
-                    // OPTIONNEL : Afficher une notification navigateur
-                    // showBrowserNotification();
                 }
             })
             .catch(error => {
                 console.error('Erreur polling:', error);
+            })
+            .finally(() => {
+                isPolling = false;
             });
     }
-    
+
     /**
-     * Scroll automatique vers le bas (smooth)
+     * Réinitialiser le formulaire après envoi
      */
-    function scrollToBottom() {
-        setTimeout(() => {
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        }, 100);
-    }
-    
-    /**
-     * OPTIONNEL : Jouer un son de notification
-     */
-    function playNotificationSound() {
-        const audio = new Audio('/static/sounds/notification.mp3');
-        audio.volume = 0.3;
-        audio.play().catch(e => console.log('Son désactivé'));
-    }
-    
-    /**
-     * OPTIONNEL : Notification navigateur
-     */
-    function showBrowserNotification() {
-        if ("Notification" in window && Notification.permission === "granted") {
-            new Notification("Nouveau message", {
-                body: "{{ other_user.get_full_name }} vous a envoyé un message",
-                icon: "{% if other_user.avatar %}{{ other_user.avatar.url }}{% endif %}"
-            });
+    function resetForm() {
+        const textarea = document.querySelector('textarea[name="content"]');
+        
+        if (textarea) {
+            textarea.value = '';
+            textarea.style.height = 'auto';
+        }
+        
+        removeImagePreview();
+        
+        const indicator = document.getElementById('sending-indicator');
+        if (indicator) {
+            indicator.classList.add('hidden');
         }
     }
-    
-    // Lancer le polling toutes les 3 secondes (3000 ms)
-    setInterval(checkNewMessages, 3000);
-    
-    // Scroll initial au chargement de la page
-    scrollToBottom();
-    
-    // Réinitialiser le formulaire après envoi HTMX
-    document.body.addEventListener('htmx:afterRequest', function(event) {
-        if (event.detail.successful) {
-            // Réinitialiser le textarea
-            const textarea = document.querySelector('textarea[name="content"]');
-            if (textarea) {
-                textarea.value = '';
-                textarea.style.height = 'auto';
-            }
-            
-            // Scroll vers le bas après ajout
-            scrollToBottom();
-        }
-    });
-    
-    // Auto-resize du textarea pendant la frappe
+
+    /**
+     * Auto-resize du textarea
+     */
     const textarea = document.querySelector('textarea[name="content"]');
     if (textarea) {
         textarea.addEventListener('input', function() {
             this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     }
+
+    /**
+     * Gestion des événements HTMX
+     */
+    document.body.addEventListener('htmx:afterRequest', function(event) {
+        if (event.detail.target === messageContainer && event.detail.successful) {
+            resetForm();
+            scrollToBottom();
+            
+            // Mettre à jour lastMessageId avec le nouveau message
+            const newMessages = messageContainer.querySelectorAll('.chat');
+            if (newMessages.length > 0) {
+                const lastMessage = newMessages[newMessages.length - 1];
+                const messageId = lastMessage.getAttribute('data-message-id');
+                if (messageId) {
+                    lastMessageId = parseInt(messageId);
+                }
+            }
+        }
+    });
+
+    document.body.addEventListener('htmx:beforeRequest', function(event) {
+        if (event.detail.target === messageContainer) {
+            // Validation avant envoi
+            if (!validateForm()) {
+                event.preventDefault();
+                return;
+            }
+            
+            // Afficher l'indicateur
+            const indicator = document.getElementById('sending-indicator');
+            if (indicator) {
+                indicator.classList.remove('hidden');
+            }
+        }
+    });
+
+    /**
+     * Initialisation
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom();
+        
+        // Démarrer le polling
+        pollingInterval = setInterval(checkNewMessages, 2000);
+        
+        // Validation sur soumission du formulaire
+        messageForm.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        });
+        
+        // Gestion de la visibilité
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                clearInterval(pollingInterval);
+            } else {
+                clearInterval(pollingInterval);
+                pollingInterval = setInterval(checkNewMessages, 2000);
+                checkNewMessages();
+            }
+        });
+    });
+
+    // Nettoyage
+    window.addEventListener('beforeunload', function() {
+        clearInterval(pollingInterval);
+    });
 </script>
 
 {% endblock %}

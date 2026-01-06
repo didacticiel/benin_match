@@ -1,13 +1,7 @@
-<!-- ========================================= -->
-<!-- 1. apps/messaging/templates/messaging/partials/single_message.html -->
-<!-- Template pour UN message (quand j'envoie) -->
-<!-- ========================================= -->
-{% load static %}
-
-<!-- Un seul message. Utilisé quand J'ENVOIE un message via HTMX -->
-<div class="chat chat-end"> <!-- 'end' car c'est mon message (à droite) -->
+<!-- apps/messaging/partials/single_message.html -->
+<div class="chat chat-{% if message.sender == user %}end{% else %}start{% endif %} message-fade-in" data-message-id="{{ message.id }}">
     
-    <!-- Avatar miniature -->
+    <!-- Avatar -->
     <div class="chat-image avatar placeholder">
         <div class="w-8 h-8 rounded-full">
             {% if message.sender.avatar %}
@@ -22,13 +16,13 @@
         </div>
     </div>
 
-    <!-- Bulle de message (couleur primaire pour mes messages) -->
-    <div class="chat-bubble chat-bubble-primary rounded-2xl shadow-lg">
+    <!-- Bulle de message -->
+    <div class="chat-bubble {% if message.sender == user %}chat-bubble-primary{% else %}chat-bubble-secondary{% endif %} rounded-2xl shadow-lg">
         {% if message.image %}
             <img src="{{ message.image.url }}" 
-                 class="mb-2 rounded-xl max-w-[200px] cursor-pointer hover:opacity-90 transition"
+                 class="message-image mb-2"
                  onclick="window.open(this.src, '_blank')"
-                 alt="Image envoyée">
+                 alt="Image">
         {% endif %}
         {% if message.content %}
             <p class="text-base-content break-words">{{ message.content }}</p>
@@ -38,11 +32,13 @@
         </time>
     </div>
 
-    <!-- Statut d'envoi (avec checkmark) -->
-    <div class="chat-footer opacity-50 text-[10px] flex items-center gap-1">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        Envoyé
-    </div>
+    <!-- Statut de lecture -->
+    {% if message.sender == user %}
+        <div class="chat-footer opacity-50 text-[10px] flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Envoyé
+        </div>
+    {% endif %}
 </div>
