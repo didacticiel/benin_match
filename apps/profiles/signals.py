@@ -1,48 +1,36 @@
+#apps/profiles/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from datetime import date, timedelta
-
-from .models import Profile
-
-User = get_user_model()
-
 from .models import Profile
 
 User = get_user_model()
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def manage_user_profile(sender, instance, created, **kwargs):
     """
-    Signal qui crée un profil vide dès qu'un User est créé.
-    """
-    if created:
-        # Créer le profil uniquement à la création du user
-        # pour éviter de l'écraser s'il existe déjà
-        Profile.objects.create(user=instance)
-        
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    """
-    Signal qui crée un profil vide dès qu'un User est créé.
-    
-    IMPORTANT : Comme 'date_of_birth' est obligatoire, on doit donner
-    des valeurs par défaut ici si l'utilisateur vient du CLI (createsuperuser)
-    ou si le formulaire d'inscription ne l'a pas fournie.
+    Signal unique pour gérer le profil utilisateur.
+    On utilise get_or_create pour être certain de ne jamais tenter 
+    une double insertion.
     """
     if created:
         # Calculer une date par défaut (18 ans en arrière)
-        # Cela évite l'erreur IntegrityError lors de la création du superadmin
         default_dob = date.today() - timedelta(days=18*365)
         
-        # Création du profil avec les valeurs requises pour satisfaire la BDD
-        Profile.objects.create(
+        # On utilise get_or_create au lieu de .create()
+        # Cela vérifie si le profil existe AVANT d'essayer de l'insérer
+        Profile.objects.get_or_create(
             user=instance,
-            date_of_birth=default_dob, # Date obligatoire
-            gender='M',                # Par défaut Homme
-            city='Cotonou',            # Par défaut Cotonou
-            country='Bénin',
-            relationship_goal='serious'
+            defaults={
+                'date_of_birth': default_dob,
+                'gender': 'M',
+                'city': 'Cotonou',
+                'country': 'Bénin',
+                'relationship_goal': 'serious'
+            }
         )
+    else:
+        # Si c'est une mise à jour de l'User, on sauvegarde le profil s'il existe
+        if hasattr(instance, 'profile'):
+            instance.profile.save()

@@ -1,143 +1,234 @@
 {% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Benin Match - Trouvez l'Amour au Bénin et dans la Diaspora{% endblock %}
+
 {% block content %}
 
-<main x-data="{ y: 0 }" @scroll.window="y = window.pageYOffset" class="relative overflow-hidden selection:bg-primary/30">
+<main class="relative overflow-hidden">
     
     <!-- ============================================ -->
-    <!-- SECTION HERO - L'Amour a une adresse -->
+    <!-- SECTION HERO -->
     <!-- ============================================ -->
-    <section class="relative min-h-screen flex items-center justify-center bg-base-100 bg-gradient-to-b from-base-100 via-base-100 to-base-100 dark:from-violet-950/30 dark:via-base-100 dark:to-base-100 transition-colors duration-500 pt-32">
-
-        <div class="h-full">
-      <!--Nav-->
-      <div class="w-full container mx-auto">
-        <div class="w-full flex items-center justify-between">
-          <a class="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
-            Rain<span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500">blur</span>
-          </a>
-
-          <div class="flex w-1/2 justify-end content-center">
-            <a class="inline-block text-blue-300 no-underline hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out" href="https://twitter.com/intent/tweet?url=#">
-              <svg class="fill-current h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                <path
-                  d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"
-                ></path>
-              </svg>
-            </a>
-            <a
-              class="inline-block text-blue-300 no-underline hover:text-pink-500 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4 transform hover:scale-125 duration-300 ease-in-out"
-              href="https://www.facebook.com/sharer/sharer.php?u=#"
-            >
-              <svg class="fill-current h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                <path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"></path>
-              </svg>
-            </a>
-          </div>
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-base-100 via-base-200 to-base-100 pt-20">
+        
+        <!-- Background Effects -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="absolute top-20 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div class="absolute bottom-20 -right-20 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse" style="animation-delay: 1s;"></div>
         </div>
-      </div>
 
-      <!--Main-->
-      <div class="container pt-24 md:pt-36 mx-auto flex flex-wrap flex-col md:flex-row items-center">
-        <!--Left Col-->
-        <div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
-          <h1 class="my-4 text-3xl md:text-5xl text-white opacity-75 font-bold leading-tight text-center md:text-left">
-            Main
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500">
-              Hero Message
-            </span>
-            to sell yourself!
-          </h1>
-          <p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left">
-            Sub-hero message, not too long and not too short. Make it just right!
-          </p>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-          <form class="bg-gray-900 opacity-75 w-full shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <div class="mb-4">
-              <label class="block text-blue-300 py-2 font-bold mb-2" for="emailaddress">
-                Signup for our newsletter
-              </label>
-              <input
-                class="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
-                id="emailaddress"
-                type="text"
-                placeholder="you@somewhere.com"
-              />
+                <!-- Left Content -->
+                <div class="text-center lg:text-left space-y-8">
+                    
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        <span class="text-sm font-bold text-primary uppercase tracking-wider">La rencontre commence ici</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none">
+                        <span class="block text-base-content">BENIN</span>
+                        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-secondary animate-gradient">
+                            MATCH
+                        </span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-lg sm:text-xl text-base-content/70 max-w-2xl mx-auto lg:mx-0">
+                        La plateforme de rencontre <span class="font-bold text-primary">sérieuse et gratuite</span> 
+                        pour les Béninois et la Diaspora. Trouvez l'amour, le sérieux ou une vraie connexion.
+                    </p>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="{% url 'users:register' %}"
+                           class="btn btn-primary btn-lg rounded-full px-8 sm:px-12 gap-2 group hover:scale-105 transition-transform shadow-lg hover:shadow-primary/50">
+                            <span class="text-2xl">👩</span>
+                            <span>Je suis une Femme</span>
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                        <a href="{% url 'users:register' %}"
+                           class="btn btn-outline btn-secondary btn-lg rounded-full px-8 sm:px-12 gap-2 group hover:scale-105 transition-transform">
+                            <span class="text-2xl">👨</span>
+                            <span>Je suis un Homme</span>
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8">
+                        <div class="text-center space-y-1">
+                            <div class="text-3xl sm:text-4xl font-black text-primary">5K+</div>
+                            <div class="text-xs uppercase text-base-content/60 tracking-wider">Profils</div>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <div class="text-3xl sm:text-4xl font-black text-secondary">300+</div>
+                            <div class="text-xs uppercase text-base-content/60 tracking-wider">Mariages</div>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <div class="text-3xl sm:text-4xl font-black text-success">24/7</div>
+                            <div class="text-xs uppercase text-base-content/60 tracking-wider">Modération</div>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <div class="text-3xl sm:text-4xl font-black text-info">100%</div>
+                            <div class="text-xs uppercase text-base-content/60 tracking-wider">Gratuit</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Visual -->
+                <div class="relative hidden lg:flex justify-center items-center">
+                    
+                    <!-- Background Shapes -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+                    </div>
+
+                    <!-- Images Container -->
+                    <div class="relative flex items-center justify-center gap-6">
+                        
+                        <!-- Person 1 -->
+                        <div class="relative group">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                            <div class="relative">
+                                <img src="{% static 'img/arabic-man.jpg' %}"
+                                     alt="Profil homme"
+                                     class="w-56 h-72 object-cover rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                                
+                                <!-- Floating Badge -->
+                                <div class="absolute -top-4 -left-4 bg-warning text-warning-content px-4 py-2 rounded-2xl shadow-xl transform -rotate-6 hover:rotate-0 transition-transform">
+                                    <div class="text-xs font-bold">Profils vérifiés</div>
+                                    <div class="text-lg">⭐ 4.8/5</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Person 2 -->
+                        <div class="relative group mt-12">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-secondary to-primary rounded-3xl blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                            <div class="relative">
+                                <img src="{% static 'img/femme1.jpg' %}"
+                                     alt="Profil femme"
+                                     class="w-56 h-72 object-cover rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                                
+                                <!-- Floating Badge -->
+                                <div class="absolute top-4 -right-4 bg-success text-success-content px-4 py-2 rounded-2xl shadow-xl transform rotate-6 hover:rotate-0 transition-transform">
+                                    <div class="text-xs font-bold">Match réel</div>
+                                    <div class="text-lg">💚 98%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="flex items-center justify-between pt-4">
-              <button
-                class="bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
-                type="button"
-              >
-                Sign Up
-              </button>
-            </div>
-          </form>
         </div>
 
-        <!--Right Col-->
-        <div class="w-full xl:w-3/5 p-12 overflow-hidden">
-          <img class="mx-auto w-full md:w-4/5 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6" src="macbook.svg" />
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <span class="text-xs text-base-content/50 uppercase tracking-wider">Découvrir</span>
+            <svg class="w-6 h-6 text-base-content/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
         </div>
-
-        <div class="mx-auto md:pt-16">
-          <p class="text-blue-400 font-bold pb-8 lg:pb-6 text-center">
-            Download our app:
-          </p>
-          <div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
-            <img src="App Store.svg" class="h-12 pr-12 transform hover:scale-125 duration-300 ease-in-out" />
-            <img src="Play Store.svg" class="h-12 transform hover:scale-125 duration-300 ease-in-out" />
-          </div>
-        </div>
-
     </section>
 
     <!-- ============================================ -->
     <!-- SECTION COMMENT ÇA MARCHE -->
     <!-- ============================================ -->
-    <section class="py-20 md:py-32 bg-base-100 transition-colors duration-500 relative overflow-hidden">
+    <section class="py-20 md:py-32 bg-base-200 relative overflow-hidden">
         
-        <div class="container mx-auto px-4 relative z-10">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <!-- Header -->
-            <div class="max-w-3xl mb-20 text-center">
-                <h2 class="text-4xl md:text-6xl font-black text-base-content tracking-tight leading-[0.95] mb-6">
-                    Comment trouver <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">l'amour</span> ?
+            <div class="text-center mb-16 space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-4">
+                    <span class="text-sm font-bold text-primary uppercase tracking-wider">Simple & Efficace</span>
+                </div>
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black text-base-content leading-tight">
+                    Comment trouver
+                    <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">l'amour</span> ?
                 </h2>
-                <p class="text-lg text-base-content/60 leading-relaxed">
-                    Notre algorithme connecte les cœurs à travers les frontières.
+                <p class="text-lg text-base-content/60 max-w-2xl mx-auto">
+                    Notre algorithme connecte les cœurs à travers les frontières en 3 étapes simples
                 </p>
             </div>
 
-            <!-- Grille Étapes -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <!-- Steps Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 
-                <!-- Étape 1 -->
-                <div class="group relative p-8 border border-base-300 hover:border-primary/50 transition-all duration-500 bg-base-100 hover:bg-primary/[0.02] text-center">
-                    <div class="w-20 h-20 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary text-3xl mb-6 group-hover:scale-110 transition-transform">1</div>
-                    <h3 class="text-2xl font-black text-base-content mb-4">Inscription Rapide</h3>
-                    <p class="text-base-content/60">
-                        Créez votre profil en moins de 2 minutes. Email, Google ou Facebook.
-                    </p>
+                <!-- Step 1 -->
+                <div class="group relative bg-base-100 rounded-3xl p-8 border border-base-300 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+                    <div class="relative space-y-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary text-2xl font-black group-hover:scale-110 transition-transform">
+                            1
+                        </div>
+                        <h3 class="text-2xl font-black text-base-content">Inscription Rapide</h3>
+                        <p class="text-base-content/60 leading-relaxed">
+                            Créez votre profil en moins de 2 minutes avec votre email, Google ou Facebook.
+                        </p>
+                        <div class="pt-4">
+                            <svg class="w-12 h-12 text-primary/20 group-hover:text-primary/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Étape 2 -->
-                <div class="group relative p-8 border border-base-300 hover:border-secondary/50 transition-all duration-500 bg-base-100 hover:bg-secondary/[0.02] text-center">
-                    <div class="w-20 h-20 mx-auto bg-secondary/10 rounded-full flex items-center justify-center text-secondary text-3xl mb-6 group-hover:scale-110 transition-transform">2</div>
-                    <h3 class="text-2xl font-black text-base-content mb-4">Découvrez</h3>
-                    <p class="text-base-content/60">
-                        Parcourez les profils au Bénin, en France, au USA et ailleurs.
-                    </p>
+                <!-- Step 2 -->
+                <div class="group relative bg-base-100 rounded-3xl p-8 border border-base-300 hover:border-secondary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 hover:-translate-y-2">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-colors"></div>
+                    <div class="relative space-y-4">
+                        <div class="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary text-2xl font-black group-hover:scale-110 transition-transform">
+                            2
+                        </div>
+                        <h3 class="text-2xl font-black text-base-content">Découvrez</h3>
+                        <p class="text-base-content/60 leading-relaxed">
+                            Parcourez les profils vérifiés au Bénin, en France, aux USA et partout dans le monde.
+                        </p>
+                        <div class="pt-4">
+                            <svg class="w-12 h-12 text-secondary/20 group-hover:text-secondary/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Étape 3 -->
-                <div class="group relative p-8 border border-base-300 hover:border-pink-500/50 transition-all duration-500 bg-base-100 hover:bg-pink-500/[0.02] text-center">
-                    <div class="w-20 h-20 mx-auto bg-pink-500/10 rounded-full flex items-center justify-center text-pink-500 text-3xl mb-6 group-hover:scale-110 transition-transform">3</div>
-                    <h3 class="text-2xl font-black text-base-content mb-4">Match & Chat</h3>
-                    <p class="text-base-content/60">
-                        Likéz et discutez pour voir si la compatibilité est au rendez-vous.
-                    </p>
+                <!-- Step 3 -->
+                <div class="group relative bg-base-100 rounded-3xl p-8 border border-base-300 hover:border-pink-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-pink-500/20 hover:-translate-y-2">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/5 rounded-full blur-2xl group-hover:bg-pink-500/10 transition-colors"></div>
+                    <div class="relative space-y-4">
+                        <div class="w-16 h-16 bg-pink-500/10 rounded-2xl flex items-center justify-center text-pink-500 text-2xl font-black group-hover:scale-110 transition-transform">
+                            3
+                        </div>
+                        <h3 class="text-2xl font-black text-base-content">Match & Chat</h3>
+                        <p class="text-base-content/60 leading-relaxed">
+                            Likez et discutez en temps réel pour découvrir si la compatibilité est au rendez-vous.
+                        </p>
+                        <div class="pt-4">
+                            <svg class="w-12 h-12 text-pink-500/20 group-hover:text-pink-500/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -145,130 +236,140 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- SECTION BLOG (SEO) - Récupérée du Portfolio -->
+    <!-- SECTION BLOG -->
     <!-- ============================================ -->
-    <section id="blog" class="py-20 md:py-32 bg-base-200/30 relative">
-        <div class="container mx-auto px-4">
+    <section class="py-20 md:py-32 bg-base-100 relative overflow-hidden">
+        
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <!-- Header -->
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 gap-8">
-                <div class="max-w-2xl">
-                    <div class="flex items-center gap-4 mb-6">
-                        <span class="text-primary font-mono text-sm font-bold">ACTU</span>
-                        <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent"></div>
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="px-4 py-2 bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider rounded-full">
+                            Blog
+                        </span>
+                        <div class="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent max-w-xs"></div>
                     </div>
-                    <h2 class="text-4xl md:text-6xl font-black text-base-content tracking-tight leading-[0.95]">
-                        Conseils <br>
-                        <span class="text-base-content/30">Amour & Séduction</span>
+                    <h2 class="text-4xl sm:text-5xl md:text-6xl font-black text-base-content leading-tight">
+                        Conseils
+                        <span class="block text-base-content/30">Amour & Séduction</span>
                     </h2>
                 </div>
+                <a href="#" class="btn btn-outline btn-primary rounded-full group">
+                    <span>Voir tous les articles</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
             </div>
 
-            <!-- Grille d'articles -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+            <!-- Articles Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for post in latest_posts %}
                 <article class="group">
                     <!-- Image -->
-                    <a href="{{ post.get_absolute_url }}" class="block relative overflow-hidden rounded-2xl mb-6 aspect-[16/10] bg-base-200 border border-base-300">
+                    <a href="{{ post.get_absolute_url }}" class="block relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-base-200 border border-base-300 group-hover:border-primary/50 transition-all duration-500">
                         {% if post.cover_image %}
-                            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" 
-                                 class="object-cover w-full h-full transition-all duration-700 group-hover:scale-110 group-hover:brightness-75">
+                            <img src="{{ post.cover_image.url }}" 
+                                 alt="{{ post.title }}" 
+                                 class="object-cover w-full h-full transition-all duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         {% else %}
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-base-300 flex items-center justify-center">
-                                <span class="font-black text-3xl text-base-content/10 italic">{{ post.title|truncatechars:20 }}</span>
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                                <span class="font-black text-4xl text-base-content/10">{{ post.title|truncatechars:3 }}</span>
                             </div>
                         {% endif %}
+                        
+                        <!-- Read More Badge -->
+                        <div class="absolute bottom-4 right-4 bg-white text-primary px-4 py-2 rounded-full text-sm font-bold opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                            Lire →
+                        </div>
                     </a>
                     
-                    <!-- Contenu -->
+                    <!-- Content -->
                     <div class="space-y-3">
-                        <h3 class="text-2xl font-bold text-base-content group-hover:text-primary transition-colors leading-tight">
+                        <h3 class="text-xl sm:text-2xl font-bold text-base-content group-hover:text-primary transition-colors leading-tight line-clamp-2">
                             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
                         </h3>
                         <p class="text-sm text-base-content/60 leading-relaxed line-clamp-2">
                             {{ post.seo_description|default:post.content|striptags|truncatewords:15 }}
                         </p>
-                        <a href="{{ post.get_absolute_url }}" class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:gap-4 transition-all pt-2">
-                            Lire l'article
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
+                        <div class="flex items-center gap-3 pt-2 text-xs text-base-content/50">
+                            <span>{{ post.created_at|date:"d M Y" }}</span>
+                            <span>•</span>
+                            <span>5 min de lecture</span>
+                        </div>
                     </div>
                 </article>
                 {% empty %}
-                <div class="col-span-3 text-center py-20">
-                    <p class="text-base-content/50 italic">Aucun article publié pour le moment.</p>
+                <div class="col-span-full text-center py-20">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-base-200 mb-4">
+                        <svg class="w-10 h-10 text-base-content/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-base-content/50 text-lg">Aucun article publié pour le moment</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </section>
 
-       <!-- ============================================ -->
-    <!-- SECTION CTA FINAL - Image de Fond + Overlay -->
     <!-- ============================================ -->
-    <section class="relative py-20 md:py-32 bg-[url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=3000&auto=format&fit=crop')] bg-cover bg-center bg-fixed bg-no-repeat overflow-hidden">
-        
-        <!-- OVERLAY COLOR (Gradient Transparent) -->
-        <!-- Cela permet de voir l'image tout en gardant l'ambiance Orange/Violet -->
-        <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-purple-900/80 to-primary/90"></div>
-
-        <!-- PATTERN OVERLAY (La grille existante) -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    <!-- SECTION CTA FINAL -->
+    <!-- ============================================ -->
+    <section class="relative py-16 sm:py-20 md:py-28 lg:py-32 overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary via-purple-900 to-primary animate-gradient-slow bg-[length:400%_400%]">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=3000&auto=format&fit=crop')] bg-cover bg-center bg-fixed bg-no-repeat opacity-40"></div>
         </div>
 
-        <!-- CONTENU TEXTE -->
-        <div class="container mx-auto px-4 relative z-10 text-center">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
+        <!-- Pattern Overlay -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px] animate-pattern"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="container mx-auto px-4 sm:px-6 relative z-10 text-center">
+            <div class="max-w-4xl mx-auto animate-fade-up">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-tight">
                     Prêt à trouver <br>
                     votre âme sœur ?
                 </h2>
-                <p class="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+                <p class="text-base sm:text-lg md:text-xl text-white/80 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
                     Rejoignez des milliers de célibataires sérieux dès maintenant. L'inscription est 100% gratuite.
                 </p>
                 
-                <div class="flex flex-wrap justify-center gap-4">
+                <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 animate-fade-up animation-delay-300">
                     <a href="{% url 'users:register' %}" 
-                       class="btn btn-lg bg-white text-primary hover:bg-white/90 border-none rounded-full px-12 font-bold uppercase tracking-wider hover:scale-105 transition-all shadow-2xl">
+                       class="btn btn-lg bg-white text-primary hover:bg-white/90 border-none rounded-full px-8 sm:px-10 md:px-12 font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-300 transform hover:shadow-2xl animate-pulse-slow">
                         Créer mon compte
                     </a>
-                    <a href="#" class="btn btn-lg btn-outline border-2 border-white text-white hover:bg-white hover:text-primary rounded-full px-12 font-bold uppercase tracking-wider transition-all">
+                    <a href="{% url 'core:about' %}" class="btn btn-lg btn-outline border-2 border-white text-white hover:bg-white hover:text-primary rounded-full px-8 sm:px-10 md:px-12 font-bold uppercase tracking-wider transition-all duration-300">
                         En savoir plus
                     </a>
+                </div>
+                
+                <!-- Trust Badges -->
+                <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mt-10 sm:mt-12 animate-fade-up animation-delay-500">
+                    <div class="flex items-center gap-2 text-white/70">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        <span class="text-sm">Sécurisé</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-white/70">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        <span class="text-sm">Gratuit</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-white/70">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        <span class="text-sm">Vérifié</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
 </main>
-
-<!-- Styles personnalisés -->
-<style>
-    @keyframes gradient {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-    
-    @keyframes scroll {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(10px); opacity: 0; }
-    }
-    
-    .animate-scroll {
-        animation: scroll 1.5s infinite;
-    }
-    
-    .animate-fade-in {
-        animation: fadeIn 1s ease-out forwards;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
 
 {% endblock %}
