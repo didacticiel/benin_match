@@ -32,6 +32,15 @@ class ProfileDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        user = self.request.user
+        
+        # Calculer l'ID du thread entre l'utilisateur connecté et le propriétaire du profil
+        if user.is_authenticated and user != self.object.user:
+            from apps.messaging.models import get_or_create_thread
+            context['thread_id'] = get_or_create_thread(user, self.object.user).id
+        else:
+            context['thread_id'] = None # Pas de thread si on regarde son propre profil
+            
         # 1. Récupérer toutes les images du profil
         context['profile_images'] = self.object.images.all()
         
@@ -150,3 +159,40 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['completion'] = completion
         context['stats'] = stats
         return context
+
+
+#htmx----------------------------------------zone--------------------
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def upload_cover(request):
+    """
+    Vue HTMX pour upload la couverture instantanément.
+    """
+    if not request.user.is_authenticated:
+        return HttpResponse("Non autorisé", status=401)
+    
+    try:
+        profile = request.user.profile
+    except:
+        return HttpResponse("Profil introuvable", status=404)
+
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save(profile)
+            # Récupérer la nouvelle couverture
+            cover = profile.images.get(is_cover=True)
+            
+            # CORRECTION DU PATH : On pointe vers le template dans 'profiles/partials'
+            return render(request, 'profiles/partials/cover_display.html', {'cover': cover})
+            
+    # Si pas POST, retourner le bloc actuel (GET)
+    try:
+        cover = profile.images.get(is_cover=True)
+    except Profile.DoesNotExist:
+        cover = None
+        
+    # CORRECTION DU PATH
+    return render(request, 'profiles/partials/cover_display.html', {'cover': cover})

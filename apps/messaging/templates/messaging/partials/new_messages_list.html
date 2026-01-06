@@ -1,0 +1,42 @@
+<!-- ========================================= -->
+<!-- 2. apps/messaging/templates/messaging/partials/new_messages_list.html -->
+<!-- Template pour les NOUVEAUX messages reçus (polling) -->
+<!-- ========================================= -->
+
+<!-- Liste des messages reçus via polling -->
+<!-- Ces messages sont insérés automatiquement par JavaScript -->
+{% for message in messages %}
+<div class="chat chat-start"> <!-- 'start' car ce sont les messages de l'autre (à gauche) -->
+    
+    <!-- Avatar de l'expéditeur -->
+    <div class="chat-image avatar placeholder">
+        <div class="w-8 h-8 rounded-full">
+            {% if message.sender.avatar %}
+                <img src="{{ message.sender.avatar.url }}" 
+                     class="w-full h-full rounded-full object-cover"
+                     alt="{{ message.sender.get_full_name }}">
+            {% else %}
+                <div class="w-full h-full rounded-full bg-secondary/20 flex items-center justify-center text-xs font-bold text-secondary">
+                    {{ message.sender.first_name.0 }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bulle de message (couleur secondaire pour messages reçus) -->
+    <div class="chat-bubble chat-bubble-secondary rounded-2xl shadow-lg">
+        {% if message.image %}
+            <img src="{{ message.image.url }}" 
+                 class="mb-2 rounded-xl max-w-[200px] cursor-pointer hover:opacity-90 transition"
+                 onclick="window.open(this.src, '_blank')"
+                 alt="Image reçue">
+        {% endif %}
+        {% if message.content %}
+            <p class="text-base-content break-words">{{ message.content }}</p>
+        {% endif %}
+        <time class="text-[10px] opacity-50 block mt-1">
+            {{ message.created_at|date:"H:i" }}
+        </time>
+    </div>
+</div>
+{% endfor %}

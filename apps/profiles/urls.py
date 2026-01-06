@@ -10,4 +10,7 @@ urlpatterns = [
     path('edit/', views.ProfileUpdateView.as_view(), name='edit'),
     path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='detail'),
     path('me/', views.DashboardView.as_view(), name='my_profile'), # Redirection vers le dashboard
+    
+    #htmx---------zone-------------
+    path('upload-cover/', views.upload_cover, name='upload_cover'),
 ]

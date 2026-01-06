@@ -1,0 +1,18 @@
+<!-- Image de couverture (Seulement la partie haute) -->
+<div id="cover-container" class="w-full h-48 md:h-64 bg-gradient-to-r from-primary to-secondary relative overflow-hidden group">
+    
+    {% if cover %}
+        <img src="{{ cover.image.url }}" class="w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500">
+        <!-- Bouton petit pour supprimer -->
+        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+             <button hx-post="{% url 'profiles:delete_cover' %}" hx-confirm="Supprimer cette photo ?" hx-target="#cover-container" hx-swap="outerHTML" class="btn btn-circle btn-xs btn-ghost bg-black/50 text-white border-white/20">
+                ✕
+             </button>
+        </div>
+    {% else %}
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517841905240-47398876266-dce6426f4a6c?q=80&w=3000&auto=format&fit=crop')] bg-cover opacity-20"></div>
+        <div class="absolute inset-0 flex items-center justify-center text-white/20">
+            <span class="text-xs font-bold uppercase tracking-widest">Aucune bannière</span>
+        </div>
+    {% endif %}
+</div>

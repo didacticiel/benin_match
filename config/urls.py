@@ -20,7 +20,7 @@ urlpatterns = [
     path('blog/', include('apps.blog.urls', namespace='blog')),
     
     # 6. MESSAGING (Messages) - Pour les liens dans la navbar
-    # path('messages/', include('apps.messaging.urls', namespace='messaging')),
+    path('messages/', include('apps.messaging.urls', namespace='messaging')),
     
     # 7. SEARCH (Recherche)
     # path('search/', include('apps.search.urls', namespace='search')),

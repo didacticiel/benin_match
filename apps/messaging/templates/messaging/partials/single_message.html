@@ -1,0 +1,48 @@
+<!-- ========================================= -->
+<!-- 1. apps/messaging/templates/messaging/partials/single_message.html -->
+<!-- Template pour UN message (quand j'envoie) -->
+<!-- ========================================= -->
+{% load static %}
+
+<!-- Un seul message. Utilisé quand J'ENVOIE un message via HTMX -->
+<div class="chat chat-end"> <!-- 'end' car c'est mon message (à droite) -->
+    
+    <!-- Avatar miniature -->
+    <div class="chat-image avatar placeholder">
+        <div class="w-8 h-8 rounded-full">
+            {% if message.sender.avatar %}
+                <img src="{{ message.sender.avatar.url }}" 
+                     class="w-full h-full rounded-full object-cover"
+                     alt="{{ message.sender.get_full_name }}">
+            {% else %}
+                <div class="w-full h-full rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+                    {{ message.sender.first_name.0 }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bulle de message (couleur primaire pour mes messages) -->
+    <div class="chat-bubble chat-bubble-primary rounded-2xl shadow-lg">
+        {% if message.image %}
+            <img src="{{ message.image.url }}" 
+                 class="mb-2 rounded-xl max-w-[200px] cursor-pointer hover:opacity-90 transition"
+                 onclick="window.open(this.src, '_blank')"
+                 alt="Image envoyée">
+        {% endif %}
+        {% if message.content %}
+            <p class="text-base-content break-words">{{ message.content }}</p>
+        {% endif %}
+        <time class="text-[10px] opacity-50 block mt-1">
+            {{ message.created_at|date:"H:i" }}
+        </time>
+    </div>
+
+    <!-- Statut d'envoi (avec checkmark) -->
+    <div class="chat-footer opacity-50 text-[10px] flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Envoyé
+    </div>
+</div>

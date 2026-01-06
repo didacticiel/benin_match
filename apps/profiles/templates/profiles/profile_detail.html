@@ -56,9 +56,13 @@
 
                 <!-- Actions -->
                 {% if user.is_authenticated %}
-                    <a href="#" class="btn btn-primary w-full rounded-full shadow-lg shadow-primary/30">
-                        Envoyer un message
-                    </a>
+                    {% if thread_id %}
+                        <a href="{% url 'messaging:detail' thread_id %}" class="btn btn-primary w-full rounded-full shadow-lg shadow-primary/30">
+                            Envoyer un message
+                        </a>
+                    {% else %}
+                        <!-- Logique si c'est ton propre profil ou non connecté -->
+                    {% endif %}
                     <button class="btn btn-outline w-full rounded-full mt-2 text-error border-error/20 hover:bg-error/5 hover:border-error">
                         Bloquer
                     </button>
