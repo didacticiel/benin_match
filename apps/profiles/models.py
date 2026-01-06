@@ -19,7 +19,8 @@ class Profile(models.Model):
     
     # --- Identité ---
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    date_of_birth = models.DateField(verbose_name=_("Date de naissance"))
+    date_of_birth = models.DateField(null=True, blank=True, verbose_name=_("Date de naissance"))
+    
     bio = models.TextField(max_length=500, blank=True, verbose_name=_("Biographie"))
     
     # --- Localisation ---
