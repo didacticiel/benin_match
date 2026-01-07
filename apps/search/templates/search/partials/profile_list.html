@@ -1,0 +1,50 @@
+<!-- Liste des profils (Pour HTMX et initial GET) -->
+{% for profile in profiles %}
+<div class="bg-base-200/50 border border-white/10 rounded-2xl p-4 hover:border-primary/50 transition-all duration-300 group cursor-pointer shadow-sm hover:shadow-xl">
+    <!-- Lien vers le détail -->
+    <a href="{% url 'profiles:detail' profile.id %}" class="block">
+        
+        <!-- Container Image -->
+        <div class="w-full aspect-square rounded-xl overflow-hidden mb-3 relative bg-black/50">
+            {% if profile.user.avatar %}
+                <img src="{{ profile.user.avatar.url }}" 
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     alt="{{ profile.user.get_full_name }}">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ profile.user.email }}&background=f97316&color=fff" 
+                     class="w-full h-full object-cover"
+                     alt="{{ profile.user.get_full_name }}">
+            {% endif %}
+            
+            <!-- Badge Diaspora (Top Right) -->
+            {% if profile.is_diaspora %}
+                <div class="absolute top-2 right-2 bg-secondary text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-lg">
+                    DIASPORA
+                </div>
+            {% endif %}
+
+            <!-- Badge New (Si récent) -->
+            {% if profile.user.date_joined|timesince < "3 days" %}
+                <div class="absolute top-2 left-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-lg">
+                    NEW
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Infos Texte -->
+        <div class="text-center">
+            <h3 class="font-bold text-base-content mb-1 truncate px-2">{{ profile.user.get_full_name }}</h3>
+            
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="text-sm text-primary font-bold">{{ profile.age }} ans</span>
+                <span class="text-xs text-base-content/40">•</span>
+                <span class="text-xs text-base-content/60 uppercase">{{ profile.city }}</span>
+            </div>
+            
+            <div class="text-[10px] uppercase tracking-widest text-primary font-bold px-4 py-1 bg-primary/5 rounded-full inline-block">
+                Voir le profil
+            </div>
+        </div>
+    </a>
+</div>
+{% endfor %}

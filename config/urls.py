@@ -23,7 +23,7 @@ urlpatterns = [
     path('messages/', include('apps.messaging.urls', namespace='messaging')),
     
     # 7. SEARCH (Recherche)
-    # path('search/', include('apps.search.urls', namespace='search')),
+    path('search/', include('apps.search.urls', namespace='search')),
     
     # 8. CKEDITOR
     path('ckeditor/', include('ckeditor_uploader.urls')),

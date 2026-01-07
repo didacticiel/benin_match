@@ -81,6 +81,7 @@
             
             <ul class="flex items-center gap-8 font-bold uppercase text-[10px] tracking-[0.2em] text-base-content/70">  
                 <li><a href="{% url 'profiles:list' %}" class="hover:text-primary transition-colors">Rencontres</a></li>
+                <li><a href="{% url 'search:list' %}" class="hover:text-primary transition-colors">Recherchez ici</a></li>
                 <!-- Si connecté -> Mon Profil, Sinon -> Inscription -->
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'profiles:my_profile' %}" class="hover:text-secondary transition-colors">Mon Profil</a></li>
