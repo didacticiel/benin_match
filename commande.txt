@@ -2,3 +2,5 @@ make install      # Installation Python
 make install-node # Installation Node
 make ci           # Install Node -> Build CSS -> Install Py -> Run Tests
 make run          # Lancer le serveur
+
+#tail -n 20 /var/log/beninmatch.pythonanywhere.com.error.log

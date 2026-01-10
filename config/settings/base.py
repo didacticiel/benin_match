@@ -167,6 +167,28 @@ if not DEBUG:
 # IMPORTANT: On référence le User model dans apps.users
 AUTH_USER_MODEL = 'users.User'
 
+"""
+# =========================================================================
+# 5. BASE DE DONNÉES (MySQL)
+# =========================================================================
+import dj_database_url
+
+# On récupère l'URL brute
+DATABASE_URL = env('DATABASE_URL')
+
+# On configure Django en s'assurant qu'AUCUNE option PostgreSQL ne passe
+DATABASES = {
+    'default': dj_database_url.parse(DATABASE_URL)
+}
+
+# IMPORTANT : On force la suppression des clés incompatibles avec MySQL
+if 'sslmode' in DATABASES['default'].get('OPTIONS', {}):
+    del DATABASES['default']['OPTIONS']['sslmode']
+
+# Optionnel : Ajoutez cette ligne pour le modèle utilisateur personnalisé
+AUTH_USER_MODEL = 'users.User'
+"""
+
 
 # =========================================================================
 # 6. AUTHENTIFICATION & ALLAUTH
