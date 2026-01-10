@@ -1,152 +1,56 @@
-
-<!-- templates/search/search.html -->
 {% extends "core/base.html" %}
 {% load static %}
-
-{% block title %}Recherche de célibataires - Benin Match{% endblock %}
+{% block title %}Résultats - Benin Match{% endblock %}
 
 {% block content %}
 <main class="pt-32 pb-20 min-h-screen bg-base-100 transition-colors duration-300">
     <div class="container mx-auto px-4">
         
-        <!-- Page Header -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <!-- Header Page -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
             <div>
                 <h1 class="text-3xl font-black text-base-content tracking-tight">
-                    Trouver l'amour
+                    {% if request.GET.city %}
+                        Résultats pour "{{ request.GET.city }}"
+                    {% elif request.GET.gender == 'M' %}
+                        Profils Hommes
+                    {% elif request.GET.gender == 'F' %}
+                        Profils Femmes
+                    {% else %}
+                        Tous les profils
+                    {% endif %}
                 </h1>
-                <p class="text-base-content/60 mt-1">Découvrez les profils qui correspondent à vos critères.</p>
             </div>
             
-            <!-- Bouton Toggle Mobile (Filtres) -->
-            <label for="my-drawer" class="md:hidden btn btn-primary rounded-full px-6">
-                Filtres
-            </label>
+            <!-- Bouton pour ré-ouvrir les filtres -->
+            <button onclick="document.getElementById('search_modal').showModal()" class="btn btn-outline btn-primary gap-2">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2a2 2 0 000 4h4a2 2 0 000 4H4M7 7h10a1 1 0 010 2H7a1 1 0 010-2z" />
+                </svg>
+                Modifier les filtres
+            </button>
         </div>
 
-        <!-- LAYOUT : Sidebar (Filtres) + Contenu (Résultats) -->
-        <div class="drawer lg:drawer-open">
-            <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col lg:flex-row gap-8">
-                
-                <!-- 1. SIDEBAR : FORMULAIRE DE FILTRES (Left) -->
-                <div class="drawer-side lg:w-1/4 min-h-screen lg:min-h-auto lg:h-[600px] p-6 bg-base-200/30 border border-white/10 rounded-3xl sticky top-32 shadow-xl">
-                    
-                    <!-- Header Sidebar -->
-                    <div class="flex justify-between items-center mb-6 pb-6 border-b border-white/5">
-                        <h2 class="text-xl font-black text-base-content">Filtres</h2>
-                        <!-- Indicateur de chargement HTMX -->
-                        <span id="search-spinner" class="hidden loading loading-spinner loading-sm text-primary"></span>
-                    </div>
-
-                    <!-- FORMULAIRE HTMX -->
-                    <!-- hx-post : Envoie les données sans recharger la page -->
-                    <!-- hx-target : Remplace le contenu de la div #search-results -->
-                    <!-- hx-indicator : Affiche le spinner pendant le traitement -->
-                    <form method="post" 
-                          hx-post="{% url 'search:list' %}" 
-                          hx-target="#search-results" 
-                          hx-indicator="#search-spinner"
-                          class="space-y-5">
-                        {% csrf_token %}
-
-                        <!-- Genre -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-bold text-base-content">Genre</span>
-                            <span class="label-text-alt text-xs text-primary">Requis</span>
-                            </label>
-                            {{ form.gender }}
-                        </div>
-
-                        <!-- Relation -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-bold text-base-content">Recherche</span>
-                            <span class="label-text-alt text-xs text-base-content/50">Pourquoi ?</span>
-                            </label>
-                            {{ form.relationship_goal }}
-                        </div>
-
-                        <!-- Ville -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-bold text-base-content">Ville</span>
-                            </label>
-                            <div class="relative">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-2.5 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                                {{ form.city }}
-                            </div>
-                        </div>
-
-                        <!-- Diaspora -->
-                        <div class="form-control w-full py-2">
-                            <label class="label cursor-pointer gap-4">
-                                <span class="label-text font-bold text-base-content flex-1">Diaspora (Hors Bénin)</span>
-                                {{ form.is_diaspora }}
-                                <span class="label-text-alt text-xs text-secondary">Oui</span>
-                            </label>
-                        </div>
-
-                        <!-- Âge Range -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-bold text-base-content">Âge</span>
-                            </label>
-                            <div class="flex items-center gap-4">
-                                <div class="flex-1">
-                                    <span class="text-xs text-base-content/50 block mb-1">Entre</span>
-                                    {{ form.min_age }}
-                                </div>
-                                <div class="text-sm font-bold text-primary">et</div>
-                                <div class="flex-1">
-                                    <span class="text-xs text-base-content/50 block mb-1">Et</span>
-                                    {{ form.max_age }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bouton Recharger / Reset -->
-                        <div class="grid grid-cols-2 gap-4 mt-6">
-                            <button type="submit" class="btn btn-primary rounded-xl w-full">
-                                🔍 Filtrer
-                            </button>
-                            <button type="button" onclick="window.location.href='{% url 'search:list' %}'" class="btn btn-outline rounded-xl w-full">
-                                Reset
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Déconnexion (En bas du sidebar) -->
-                    <div class="mt-auto pt-6 border-t border-white/5 lg:hidden">
-                        <a href="{% url 'users:logout' %}" class="btn btn-error btn-outline border-error/20 w-full">
-                            Déconnexion
-                        </a>
-                    </div>
-                </div>
-
-                <!-- 2. CONTENEUR RÉSULTATS (Right) -->
-                <!-- c'est cette DIV ID qui sera ciblée par HTMX -->
-                <div class="flex-1 lg:pt-0 pt-20">
-                    <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        
-                        <!-- On inclut le Partial pour le premier chargement (GET) -->
-                        {% include 'search/partials/profile_list.html' %}
-
-                    </div>
-                    
-                    <!-- Message si vide -->
-                    <div id="no-results" class="hidden text-center py-20 col-span-full">
-                        <div class="inline-block p-4 bg-white/5 rounded-full mb-4">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        </div>
-                        <h3 class="text-xl font-black text-base-content">Aucun résultat</h3>
-                        <p class="text-base-content/60">Essayez d'élargir vos critères de recherche.</p>
-                    </div>
-                </div>
-
-            </div>
+        <!-- GRILLE DES RÉSULTATS -->
+        <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% include 'search/partials/profile_list.html' %}
         </div>
+
+        <!-- PAGINATION -->
+        {% if is_paginated %}
+        <div class="flex justify-center gap-2 mt-16">
+            {% if page_obj.has_previous %}
+                <a href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}{% if forloop.last %}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" class="btn btn-ghost">Précédent</a>
+            {% endif %}
+            
+            <span class="btn btn-ghost btn-disabled">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            
+            {% if page_obj.has_next %}
+                <a href="?{% for key, value in request.GET.items %}{{ key }}={{ value }}{% if forloop.last %}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" class="btn btn-ghost">Suivant</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
     </div>
 </main>
 {% endblock %}
