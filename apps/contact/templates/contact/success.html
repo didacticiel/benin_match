@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Message Envoyé - Benin Match{% endblock %}
+
+{% block content %}
+<main class="pt-32 pb-20 min-h-screen bg-base-100 transition-colors duration-500">
+    <div class="container mx-auto px-4 flex items-center justify-center">
+        <div class="text-center max-w-2xl">
+            
+            <!-- Animation Succès -->
+            <div class="mb-8 inline-flex items-center justify-center w-24 h-24 rounded-full bg-success/10">
+                <div class="animate-checkmark duration-300 ease-in-out">
+                    <svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+            <style>
+                @keyframes scale-in {
+                    0% { transform: scale(0); opacity: 0; }
+                    50% { transform: scale(1.2); }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+                .animate-checkmark { animation: scale-in 0.5s ease-out forwards; }
+            </style>
+
+            <h1 class="text-4xl md:text-5xl font-black text-base-content mb-4">
+                Message envoyé !
+            </h1>
+            <p class="text-lg text-base-content/60 mb-10">
+                Merci <span class="font-bold text-base-content">Abdoul</span>, nous avons bien reçu votre message.
+                <br>
+                Notre équipe vous répondra à l'adresse <span class="font-bold text-primary">{{ support_email }}</span> sous 24h.
+            </p>
+
+            <div class="flex justify-center gap-4">
+                <a href="{% url 'contact:contact' %}" class="btn btn-outline btn-lg rounded-xl px-8">
+                    Envoyer un autre message
+                </a>
+                <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg rounded-xl px-8 shadow-lg shadow-primary/20">
+                    Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

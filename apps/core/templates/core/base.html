@@ -84,8 +84,8 @@
                     {% else %}
                         <li><a href="{% url 'users:register' %}" class="hover:text-secondary transition-colors">Inscription</a></li>
                     {% endif %}
-                    <li><a href="#blog" class="hover:text-primary transition-colors">Blog</a></li>
-                    <li><a href="#cta" class="hover:text-secondary transition-colors">Contact</a></li>
+                    <li><a href="{% url 'blog:post_list' %}" class="hover:text-primary transition-colors">Astuces & conseils</a></li>
+                    <li><a href="{% url 'contact:contact' %}" class="hover:text-secondary transition-colors">Contact</a></li>
                 </ul>
             </div>
 
@@ -185,7 +185,7 @@
                 <li><a href="#hero">Accueil</a></li>
                 <li><a href="{% url 'search:list' %}">Recherche</a></li>
                 <li><a href="#cta">S'inscrire</a></li>
-                <li><a href="#blog">Blog</a></li>
+                <li><a href="{% url 'blog:post_list' %}">Blog</a></li>
                 {% if not user.is_authenticated %}
                     <div class="divider"></div>
                     <li><a href="{% url 'users:login' %}">Connexion</a></li>
@@ -322,7 +322,7 @@
                     <h4 class="font-bold uppercase text-[10px] tracking-[0.2em] mb-6 text-primary">Explorer</h4>
                     <ul class="space-y-4 text-sm text-gray-400">
                         <li><a href="{% url 'search:list' %}" class="hover:text-white transition-colors">Recherche</a></li>
-                        <li><a href="#blog" class="hover:text-white transition-colors">Blog & Conseils</a></li>
+                        <li><a href="{% url 'blog:post_list' %}" class="hover:text-white transition-colors">Blog & Conseils</a></li>
                         <li><a href="#" class="hover:text-primary transition-colors">Succès Stories</a></li>
                     </ul>
                 </div>
@@ -332,7 +332,7 @@
                         <li><a href="#" class="hover:text-white transition-colors">Mentions Légales</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Confidentialité</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Sécurité</a></li>
-                        <li><a href="{% url 'core:contact' %}" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="{% url 'contact:contact' %}" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
             </div>

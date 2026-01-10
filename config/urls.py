@@ -25,11 +25,14 @@ urlpatterns = [
     # 7. SEARCH (Recherche)
     path('search/', include('apps.search.urls', namespace='search')),
     
-    # 8. CKEDITOR
+    # 8 . CONTACT (Contact)
+    path('contact/', include('apps.contact.urls', namespace='contact')),
+    
+    # 9. CKEDITOR
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
-# 9. STATIC & MEDIA
+# 10. STATIC & MEDIA
 if settings.DEBUG:
     try:
         import debug_toolbar

@@ -73,6 +73,7 @@ LOCAL_APPS = [
     'apps.search',       # Moteur de recherche & Algo matching
     'apps.messaging',    # Chat interne
     'apps.blog',         # Blog pour le SEO
+    'apps.contact'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
