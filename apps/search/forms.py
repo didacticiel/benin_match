@@ -1,3 +1,4 @@
+#apps/search/forms.py
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -43,6 +44,6 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full', 'placeholder': '100', 'min': '18', 'max': '100'})
     )
-    
+
     # Checkbox Diaspora
     is_diaspora = forms.BooleanField(label="Vit à l'étranger (Diaspora)", required=False, widget=forms.CheckboxInput(attrs={'class': 'checkbox checkbox-primary mt-2'}))

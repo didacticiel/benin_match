@@ -6,12 +6,12 @@
 {% block content %}
 
 <main class="relative overflow-hidden">
-    
+
     <!-- ============================================ -->
     <!-- SECTION HERO -->
     <!-- ============================================ -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-base-100 via-base-200 to-base-100 pt-20">
-        
+
         <!-- Background Effects -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <div class="absolute top-20 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
@@ -23,7 +23,7 @@
 
                 <!-- Left Content -->
                 <div class="text-center lg:text-left space-y-8">
-                    
+
                     <!-- Badge -->
                     <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
                         <span class="relative flex h-2 w-2">
@@ -37,13 +37,13 @@
                     <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none">
                         <span class="block text-base-content">BENIN</span>
                         <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-secondary animate-gradient">
-                            MATCH
+                            DATING
                         </span>
                     </h1>
 
                     <!-- Description -->
                     <p class="text-lg sm:text-xl text-base-content/70 max-w-2xl mx-auto lg:mx-0">
-                        La plateforme de rencontre <span class="font-bold text-primary">sérieuse et gratuite</span> 
+                        La plateforme de rencontre <span class="font-bold text-primary">sérieuse et gratuite</span>
                         pour les Béninois et la Diaspora. Trouvez l'amour, le sérieux ou une vraie connexion.
                     </p>
 
@@ -90,7 +90,7 @@
 
                 <!-- Right Visual -->
                 <div class="relative hidden lg:flex justify-center items-center">
-                    
+
                     <!-- Background Shapes -->
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
@@ -98,7 +98,7 @@
 
                     <!-- Images Container -->
                     <div class="relative flex items-center justify-center gap-6">
-                        
+
                         <!-- Person 1 -->
                         <div class="relative group">
                             <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-3xl blur opacity-50 group-hover:opacity-75 transition-opacity"></div>
@@ -106,7 +106,7 @@
                                 <img src="{% static 'img/arabic-man.jpg' %}"
                                      alt="Profil homme"
                                      class="w-56 h-72 object-cover rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                                
+
                                 <!-- Floating Badge -->
                                 <div class="absolute -top-4 -left-4 bg-warning text-warning-content px-4 py-2 rounded-2xl shadow-xl transform -rotate-6 hover:rotate-0 transition-transform">
                                     <div class="text-xs font-bold">Profils vérifiés</div>
@@ -122,7 +122,7 @@
                                 <img src="{% static 'img/femme1.jpg' %}"
                                      alt="Profil femme"
                                      class="w-56 h-72 object-cover rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                                
+
                                 <!-- Floating Badge -->
                                 <div class="absolute top-4 -right-4 bg-success text-success-content px-4 py-2 rounded-2xl shadow-xl transform rotate-6 hover:rotate-0 transition-transform">
                                     <div class="text-xs font-bold">Match réel</div>
@@ -149,14 +149,14 @@
     <!-- SECTION COMMENT ÇA MARCHE -->
     <!-- ============================================ -->
     <section class="py-20 md:py-32 bg-base-200 relative overflow-hidden">
-        
+
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-5">
             <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         </div>
 
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
+
             <!-- Header -->
             <div class="text-center mb-16 space-y-4">
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-4">
@@ -173,7 +173,7 @@
 
             <!-- Steps Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                
+
                 <!-- Step 1 -->
                 <div class="group relative bg-base-100 rounded-3xl p-8 border border-base-300 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
@@ -239,9 +239,9 @@
     <!-- SECTION BLOG -->
     <!-- ============================================ -->
     <section class="py-20 md:py-32 bg-base-100 relative overflow-hidden">
-        
+
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
+
             <!-- Header -->
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8">
                 <div class="space-y-4">
@@ -271,8 +271,8 @@
                     <!-- Image -->
                     <a href="{{ post.get_absolute_url }}" class="block relative overflow-hidden rounded-2xl mb-6 aspect-[4/3] bg-base-200 border border-base-300 group-hover:border-primary/50 transition-all duration-500">
                         {% if post.cover_image %}
-                            <img src="{{ post.cover_image.url }}" 
-                                 alt="{{ post.title }}" 
+                            <img src="{{ post.cover_image.url }}"
+                                 alt="{{ post.title }}"
                                  class="object-cover w-full h-full transition-all duration-700 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         {% else %}
@@ -280,13 +280,13 @@
                                 <span class="font-black text-4xl text-base-content/10">{{ post.title|truncatechars:3 }}</span>
                             </div>
                         {% endif %}
-                        
+
                         <!-- Read More Badge -->
                         <div class="absolute bottom-4 right-4 bg-white text-primary px-4 py-2 rounded-full text-sm font-bold opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
                             Lire →
                         </div>
                     </a>
-                    
+
                     <!-- Content -->
                     <div class="space-y-3">
                         <h3 class="text-xl sm:text-2xl font-bold text-base-content group-hover:text-primary transition-colors leading-tight line-clamp-2">
@@ -340,9 +340,9 @@
                 <p class="text-base sm:text-lg md:text-xl text-white/80 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
                     Rejoignez des milliers de célibataires sérieux dès maintenant. L'inscription est 100% gratuite.
                 </p>
-                
+
                 <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 animate-fade-up animation-delay-300">
-                    <a href="{% url 'users:register' %}" 
+                    <a href="{% url 'users:register' %}"
                        class="btn btn-lg bg-white text-primary hover:bg-white/90 border-none rounded-full px-8 sm:px-10 md:px-12 font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-300 transform hover:shadow-2xl animate-pulse-slow">
                         Créer mon compte
                     </a>
@@ -350,7 +350,7 @@
                         En savoir plus
                     </a>
                 </div>
-                
+
                 <!-- Trust Badges -->
                 <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mt-10 sm:mt-12 animate-fade-up animation-delay-500">
                     <div class="flex items-center gap-2 text-white/70">

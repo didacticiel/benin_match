@@ -1,43 +1,32 @@
-# benin_match/deploy.sh
 #!/bin/bash
-# Nom du script : deploy.sh
-
 echo "=========================================="
-echo "🚀 DÉPLOIEMENT AUTOMATIQUE BENIN MATCH"
+echo "🚀 DÉPLOIEMENT BENIN MATCH (MODE LIGHT)"
 echo "=========================================="
 
-# 1. Activer l'environnement virtuel Python
-source ~/benin_match/venv/bin/activate
-
-# 2. Se placer dans le dossier du projet
+# 1. Aller dans le dossier et activer l'environnement
 cd ~/benin_match
+source venv/bin/activate
 
-# 3. Récupérer le dernier code depuis GitHub
-echo "📥 Mise à jour du code (git pull)..."
+# 2. Récupérer le code (le CSS doit être compilé en LOCAL avant le push)
+echo "📥 Mise à jour du code..."
 git pull origin main
 
-# 4. Mettre à jour les dépendances Python
+# 3. Mettre à jour Python
 echo "🐍 Mise à jour des paquets Python..."
-pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Appliquer les migrations de la base de données (Postgres)
+# 4. Base de données
 echo "💾 Migration de la base de données..."
 python manage.py migrate --noinput
 
-# 6. Compiler les fichiers statiques (CSS/JS/Images)
+# 5. Fichiers statiques
 echo "📦 Collecte des fichiers statiques..."
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --clear
 
-# 7. Compiler Tailwind CSS v4 avec Node.js (Nouvelle méthode)
-echo "🎨 Compilation de Tailwind CSS (npm)..."
-npm run build
-
-# 8. Nettoyer le cache Django si nécessaire (optionnel)
-# python manage.py clearsessions
+# 6. Rechargement automatique du serveur
+echo "🔄 Rechargement du serveur..."
+touch /var/www/beninmatch_pythonanywhere_com_wsgi.py
 
 echo "=========================================="
-echo "✅ DÉPLOIEMENT TERMINÉ AVEC SUCCÈS"
-echo "⚠️ ACTION MANUELLE REQUISE :"
-echo "⚠️ Va sur l'onglet 'Web' de PythonAnywhere et clique sur le bouton vert 'Reload'"
+echo "✅ DÉPLOIEMENT TERMINÉ"
 echo "=========================================="

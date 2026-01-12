@@ -1,3 +1,4 @@
+#apps/search/views.py
 from django.shortcuts import render
 from django.views.generic import View
 from django.db.models import Q, Max
@@ -19,11 +20,11 @@ class SearchView(View):
     def get(self, request, *args, **kwargs):
         # Initialiser le formulaire avec les paramètres GET s'il y en a (ex: ?gender=F)
         form = SearchForm(request.GET)
-        
+
         # Récupérer les profils
         profiles = Profile.objects.filter(is_active=True).select_related('user')
         profiles = self.apply_filters(form, profiles)
-        
+
         # Pagination (Standard)
         profiles = profiles.order_by('-user__date_joined')[:20]
 
@@ -37,11 +38,11 @@ class SearchView(View):
         Recherche HTMX.
         """
         form = SearchForm(request.POST)
-        
+
         # Récupérer les profils filtrés
         profiles = Profile.objects.filter(is_active=True).select_related('user')
         profiles = self.apply_filters(form, profiles)
-        
+
         # Renvoyer SEULEMENT la grille HTML (Partial)
         # `hx-target="#search-results"` va remplacer la grille dans le DOM
         return render(request, 'search/partials/profile_list.html', {
@@ -76,24 +77,40 @@ class SearchView(View):
         # 2. Appliquer les filtres
         if data.get('gender'):
             queryset = queryset.filter(gender=data['gender'])
-        
+
         if data.get('relationship_goal'):
             queryset = queryset.filter(relationship_goal=data['relationship_goal'])
-        
+
         if data.get('city'):
             queryset = queryset.filter(city__icontains=data['city'])
-        
+
         if data.get('is_diaspora'):
             queryset = queryset.filter(is_diaspora=True)
 
         # 3. Filtres d'âge (Calcul dynamique)
         today = date.today()
-        if data.get('min_age'):
-            max_dob = today.replace(year=today.year - int(data['min_age']))
-            queryset = queryset.filter(date_of_birth__lte=max_dob)
+        limit_18_years = today.replace(year=today.year - 18)
+        queryset = queryset.filter(date_of_birth__lte=limit_18_years)
 
-        if data.get('max_age'):
-            min_dob = today.replace(year=today.year - int(data['max_age']) - 1)
-            queryset = queryset.filter(date_of_birth__gte=min_dob)
-            
+        try:
+            if data.get('min_age'):
+                # On calcule l'année cible
+                target_year = today.year - int(data['min_age'])
+                # On gère le cas particulier du 29 février
+                try:
+                    max_dob = today.replace(year=target_year)
+                except ValueError:
+                    max_dob = today.replace(year=target_year, day=today.day - 1)
+                queryset = queryset.filter(date_of_birth__lte=max_dob)
+
+            if data.get('max_age'):
+                target_year = today.year - int(data['max_age']) - 1
+                try:
+                    min_dob = today.replace(year=target_year)
+                except ValueError:
+                    min_dob = today.replace(year=target_year, day=today.day - 1)
+                queryset = queryset.filter(date_of_birth__gte=min_dob)
+        except (ValueError, TypeError):
+            pass # Évite le crash si l'âge n'est pas un nombre valide
+
         return queryset
